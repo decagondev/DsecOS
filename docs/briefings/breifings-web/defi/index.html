@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - DeFi Protocol & Cross-Chain Settlement</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1508 0%, #2d2410 50%, #3d2e14 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #1a1610 0%, #2a2418 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.2), 0 0 100px rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #000000 0%, #1a1508 25%, #FFD700 75%, #FFA500 100%);
+            border: 3px solid #FFD700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 165, 0, 0.2) 0%, transparent 40%);
+            animation: goldPulse 8s linear infinite;
+        }
+
+        @keyframes goldPulse {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
+            50% { opacity: 0.6; transform: rotate(180deg); }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #FFE87C;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3em;
+            color: #00BFFF;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #FFD700;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        h3 {
+            color: #FFA500;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+            border-left: 5px solid #FFD700;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            border-color: #FFD700;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #FFD700;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .metric-label {
+            color: #FFE87C;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .defi-banner {
+            background: linear-gradient(90deg, #FFA500, #FFD700, #FFA500);
+            color: #000;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+            border-bottom: 2px solid #00BFFF;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(255, 215, 0, 0.08);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+        }
+
+        code {
+            background: rgba(255, 215, 0, 0.15);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #FFE87C;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #FFD700;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #FFE87C;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #FFD700;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #00BFFF;
+            padding: 20px 40px;
+            border-left: 4px solid #FFD700;
+            margin: 30px 0;
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255, 215, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #FFD700;
+            border: 1px solid #FFD700;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(255, 215, 0, 0.1));
+            border: 2px solid #00BFFF;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+        }
+
+        .warning-box strong {
+            color: #00BFFF;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #FFE87C;
+            font-size: 0.9em;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="defi-banner">💰 DEFI EDITION - INSTITUTIONAL GRADE 💰</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">DeFi Protocol & Cross-Chain Settlement Hub</div>
+            <div class="tagline">Settle Globally. Secure Locally.</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">Unhackable</span>
+                <span class="alert-badge">Unstoppable</span>
+                <span class="alert-badge">Enterprise Scale</span>
+                <span class="alert-badge">MEV Protected</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Platform Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                A <strong style="color: #FFD700;">secure DeFi protocol and cross-chain settlement hub</strong> for institutional-grade token swaps, yield farming, and automated market making (AMM). Leverages <strong style="color: #FFE87C;">Layer-2 scaling</strong>, <strong style="color: #FFE87C;">multi-chain bridges</strong>, and <strong style="color: #FFE87C;">oracle feeds</strong> within a <strong style="color: #00BFFF;">zero-trust, hardware-enforced enclave</strong> — ensuring MEV protection and regulatory transparency.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Daily Settlements</div>
+                    <div class="metric-value">1M+</div>
+                    <p>&lt;500ms finality</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Annual Yield</div>
+                    <div class="metric-value">$4.2M+</div>
+                    <p>Optimized pools</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Exploit Prevention</div>
+                    <div class="metric-value">99.99%</div>
+                    <p>Flash loan attacks</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Gas Fee Reduction</div>
+                    <div class="metric-value">92%</div>
+                    <p>L2 rollups</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Business Value</h3>
+                <ul class="feature-list">
+                    <li><strong>Unlock $50B+ in Idle Assets:</strong> Via secure bridging</li>
+                    <li><strong>Reduce Gas Fees by 92%:</strong> With L2 rollups</li>
+                    <li><strong>Achieve 5x Faster Settlements:</strong> Vs. traditional rails</li>
+                    <li><strong>Monetize Compliance:</strong> As a premium service</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Tailored For:</strong> Institutional DeFi platforms, hedge funds, and central bank digital currency (CBDC) pilots
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Foundation</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security & Efficiency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Gnosis Safe Multi-Sig</strong></td>
+                        <td>Institutional wallet management</td>
+                        <td>HSM + threshold (3/5)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uniswap V4 + Custom AMM</strong></td>
+                        <td>Liquidity pools & swaps</td>
+                        <td>Encrypted positions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chainlink Oracles</strong></td>
+                        <td>Price feeds + randomness</td>
+                        <td>Secure aggregation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LayerZero Bridge</strong></td>
+                        <td>Cross-chain messaging (ETH → Solana → Polkadot)</td>
+                        <td>MPC + zero-knowledge</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI MEV Guard</strong></td>
+                        <td>Frontrunning & sandwich attack prevention</td>
+                        <td>Real-time ML</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Security</h3>
+                <ul class="feature-list">
+                    <li><strong>Kernel:</strong> Hardened with SGX enclaves for private key ops</li>
+                    <li><strong>Chain Isolation:</strong> Per-protocol LXC with defi_t SELinux domain</li>
+                    <li><strong>Bridge Security:</strong> Threshold signatures + MPC for cross-chain</li>
+                    <li><strong>MEV Protection:</strong> Private mempool + AI frontrunning detection</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>DeFi Hub Architecture</h2>
+            <p style="color: #FFE87C; margin-bottom: 20px; font-weight: 600;">6-Node Institutional Cluster (Co-Lo + On-Prem)</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS DeFi Hub Cluster (6 Nodes)"
+        N1[DsecOS Node 1<br/>Protocol Core + HSM]
+        N2[DsecOS Node 2<br/>AMM + Liquidity Pools]
+        N3[DsecOS Node 3<br/>Bridge + MPC]
+        N4[DsecOS Node 4<br/>Oracle + AI Guard]
+        N5[DsecOS Node 5<br/>Ledger Node]
+        N6[DsecOS Node 6<br/>Ceph WORM + Audit]
+    end
+
+    subgraph "DeFi Protocol Layer"
+        SAFE[Gnosis Safe<br/>(Institutional Wallets)]
+        AMM[Uniswap V4<br/>(Custom Hooks)]
+        BRIDGE[LayerZero<br/>(Cross-Chain)]
+        ORACLE[Chainlink<br/>(Price Feeds)]
+    end
+
+    subgraph "Security & Compliance"
+        AI[AI MEV Guard<br/>(Frontrunning ML)]
+        AUDIT[On-Chain Auditor<br/>(WORM + ZK-Proofs)]
+        LIC[License Server<br/>DeFi Edition]
+    end
+
+    N1 <-->|Corosync HA<br/>Encrypted| N2
+    N2 <--> N3
+    N3 <--> N4
+    N4 <--> N5
+    N5 <--> N6
+    N1 --> CEPH[Ceph DeFi Vault<br/>WORM + Encrypted]
+
+    SAFE --> N1
+    AMM --> N2
+    BRIDGE --> N3
+    ORACLE --> N4
+    AI --> N4
+    AUDIT --> N6
+
+    style N1 fill:#121212,stroke:#FFD700,color:#FFF
+    style AMM fill:#1E1E1E,stroke:#FFD700,color:#FFF
+    style AI fill:#8B0000,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: User Flow -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Institutional Yield Farming Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title DeFi Cross-Chain Settlement Flow
+    section Setup
+      Activate DeFi License: 5: Fund Manager
+      Deploy Institutional Wallet: 5: Gnosis Safe
+      Fund Liquidity Pool: 5: One-Click AMM
+    section Trade
+      Oracle Price Feed: 5: Chainlink
+      Execute Cross-Chain Swap: 5: LayerZero
+      AI Guard Checks MEV: 5: <100ms
+    section Yield
+      Auto-Compound Rewards: 5: Smart Contract
+      Bridge to Solana: 4: MPC Threshold
+      Harvest 8.2% APY: 5: Auto-Claim
+    section Comply
+      Generate MiCA Report: 5: ZK-Proof
+      Audit Settlement Chain: 5: WORM Replay
+      Tax Export (SEC): 5: Immutable
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Guide -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚡ Prerequisites:</strong> DsecOS Enterprise DeFi Edition license, 6x servers (256 GB RAM, 64-core CPU, 32 TB NVMe, HSM-ready), Gnosis Safe, MetaMask Institutional
+            </div>
+
+            <h3>Step 1: Provision DeFi Hub</h3>
+            <pre><code>/scripts/pxe-deploy.sh --cluster defi-hub --nodes 6 --defi-mode --mpc-hsm --l2-rollup</code></pre>
+
+            <h3>Step 2: Deploy DeFi Stack</h3>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/defi-protocol.yml</code>:</p>
+            <pre><code>version: '3.8'
+services:
+  gnosis-safe:
+    image: safe-global/safe-wallet:latest
+    environment:
+      - THRESHOLD=3
+      - HSM_URL=/dev/hsm0
+
+  amm:
+    image: uniswap/v4-core:latest
+    command: --pool custom --hooks mev-protect
+
+  bridge:
+    image: layerzero/endpoint:latest
+    environment:
+      - ENDPOINTS=eth, sol, dot
+      - MPC_THRESHOLD=3
+
+  oracle:
+    image: chainlink/node:latest
+    command: --feeds btc,eth,eur --aggregation secure
+
+  ai-guard:
+    image: dsecos/defi-ai:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    command: guard --model mev_v9 --latency 100ms
+
+  auditor:
+    image: dsecOS/defi-audit:latest
+    volumes:
+      - ceph-worm:/audit
+    command: --worm --proof zk --compliance mica
+
+volumes:
+  ceph-worm:
+    driver: cephfs
+    driver_opts:
+      worm: true</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy defi-protocol</code></pre>
+        </div>
+
+        <!-- Slide 7: Testing -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Test Cross-Chain Swap</h2>
+            
+            <pre><code># ETH → Solana token swap
+curl -X POST https://n1:9443/api/swap \
+  -H "Authorization: Bearer $JWT" \
+  -d '{"from": "ETH", "to": "SOL", "amount": "1000", "slippage": "0.5%"}'</code></pre>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Results</h3>
+                <ul class="feature-list">
+                    <li><strong>Finality:</strong> 487ms</li>
+                    <li><strong>MEV Blocked:</strong> 3 attempts prevented</li>
+                    <li><strong>Compliance:</strong> Auto-generates EU MiCA transaction report</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Security & Compliance -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Security & Compliance</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Key Sovereignty</div>
+                    <div class="metric-value">HSM + MPC</div>
+                    <p>No seed phrases</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">MEV Immunity</div>
+                    <div class="metric-value">100%</div>
+                    <p>Private mempool + AI</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Compliance</div>
+                    <div class="metric-value">MiCA</div>
+                    <p>SEC, FCA ready</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">MEV Blocked</div>
+                    <div class="metric-value">£1.4M</div>
+                    <p>Per year</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Compliance Standards</h3>
+                <ul class="feature-list">
+                    <li><strong>MiCA:</strong> EU Markets in Crypto-Assets regulation</li>
+                    <li><strong>SEC Reg S-P:</strong> Privacy of consumer financial information</li>
+                    <li><strong>FCA PS21/21:</strong> UK cryptoasset registration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Performance & Yield Metrics</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Settlement Finality</strong></td>
+                        <td style="color: #00FF00;">487 ms</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Daily Volume</strong></td>
+                        <td style="color: #00FF00;">1.2M swaps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Yield APY</strong></td>
+                        <td style="color: #00FF00;">8.2% (stablecoin)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MEV Blocked</strong></td>
+                        <td style="color: #00FF00;">£1.4M/year</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="stats-bar" style="margin-top: 40px;">
+                <div class="stat">
+                    <div class="stat-value">487ms</div>
+                    <div class="stat-label">Finality</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">8.2%</div>
+                    <div class="stat-label">APY</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1.2M</div>
+                    <div class="stat-label">Daily Swaps</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">£1.4M</div>
+                    <div class="stat-label">MEV Saved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>$500M DeFi Fund Example</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current</th>
+                            <th>With DsecOS</th>
+                            <th>Net Gain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Yield</td>
+                            <td>4.1% ($20.5M)</td>
+                            <td>8.2% ($41M)</td>
+                            <td style="color: #00FF00; font-weight: bold;">+$20.5M</td>
+                        </tr>
+                        <tr>
+                            <td>MEV Savings</td>
+                            <td>$0</td>
+                            <td>£2.1M</td>
+                            <td style="color: #00FF00; font-weight: bold;">+£2.1M</td>
+                        </tr>
+                        <tr>
+                            <td>Total Annual Gain</td>
+                            <td>$20.5M</td>
+                            <td>$41M + £2.1M</td>
+                            <td style="color: #00FF00; font-weight: bold;">+$22.6M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #FFE87C; margin-bottom: 20px;">Total Annual Net Gain</div>
+                <div style="font-size: 3em; color: #FFD700; font-weight: bold; text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);">
+                    +$22.6M
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">Where Blockchain Meets Institutional Trust</h2>
+            
+            <div class="stats-bar" style="background: rgba(255, 215, 0, 0.2); max-width: 900px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">1M+</div>
+                    <div class="stat-label">Daily</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">8.2%</div>
+                    <div class="stat-label">APY</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">99.99%</div>
+                    <div class="stat-label">Protected</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">$22.6M</div>
+                    <div class="stat-label">Gain</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #00BFFF; background: rgba(0, 191, 255, 0.1);">
+                "Decentralized Finance at Enterprise Scale. Unhackable. Unstoppable."
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">MEV PROTECTED</span>
+                <span class="alert-badge">CROSS-CHAIN</span>
+                <span class="alert-badge">COMPLIANT</span>
+                <span class="alert-badge">INSTITUTIONAL</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #FFE87C;">
+                DsecOS Enterprise DeFi Edition
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#FFD700',
+                primaryTextColor: '#000',
+                primaryBorderColor: '#FFD700',
+                lineColor: '#FFE87C',
+                secondaryColor: '#FFA500',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#FFA500',
+                noteTextColor: '#000'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+</body>
+</html>
+
