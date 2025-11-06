@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - Secure FinTech Blockchain</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #1e1e2f 0%, #252538 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0, 191, 255, 0.15);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border: 2px solid #00BFFF;
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00BFFF, #00CED1, #1E90FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #00CED1;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.1em;
+            color: #a0a0a0;
+            font-style: italic;
+        }
+
+        h2 {
+            color: #00BFFF;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00BFFF;
+        }
+
+        h3 {
+            color: #00CED1;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(30, 144, 255, 0.1));
+            border-left: 5px solid #00BFFF;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(30, 144, 255, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.3);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #00BFFF;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #00BFFF, #1E90FF);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        code {
+            background: rgba(0, 191, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #00CED1;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #0a0a0a;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #00BFFF;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #00CED1;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(0, 191, 255, 0.05);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 15px;
+            color: #00BFFF;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #00CED1;
+            padding: 20px 40px;
+            border-left: 4px solid #00BFFF;
+            margin: 30px 0;
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00BFFF, #1E90FF);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.5);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(0, 191, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #00BFFF;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">Custom Deployment: Secure FinTech Blockchain Application</div>
+            <div class="tagline">Secure, Transparent, and Compliant Blockchain Workloads</div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                DsecOS Enterprise powers a <strong style="color: #00BFFF;">secure FinTech blockchain application</strong> for real-time cross-border payments and smart contract execution. The setup leverages DsecOS's zero-trust isolation to protect sensitive transaction data, ensure regulatory compliance, and enable seamless peer-to-peer settlements.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Settlement Time</div>
+                    <div class="metric-value">Seconds</div>
+                    <p>From days to instant</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Cost Savings</div>
+                    <div class="metric-value">80%</div>
+                    <p>Lower transaction fees</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Threat Prevention</div>
+                    <div class="metric-value">99.9%</div>
+                    <p>Blocked by SELinux</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Deployment Time</div>
+                    <div class="metric-value">&lt;15 min</div>
+                    <p>Per node</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Key Components</h3>
+                <ul class="feature-list">
+                    <li><strong>Blockchain Node:</strong> Ethereum-based for smart contracts and DeFi operations</li>
+                    <li><strong>FinTech API Layer:</strong> Node.js service for transaction processing and compliance</li>
+                    <li><strong>Database:</strong> Encrypted PostgreSQL for audit logs and user wallets</li>
+                    <li><strong>AI Monitoring:</strong> Anomaly detection for fraud prevention</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Architecture</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ethereum Node</strong></td>
+                        <td>Smart contract execution, P2P settlements</td>
+                        <td>Rootless Docker, AppArmor, nftables port isolation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Node.js API</strong></td>
+                        <td>Transaction API, KYC/AML checks</td>
+                        <td>JWT auth, rate limiting, SELinux httpd_t</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PostgreSQL</strong></td>
+                        <td>Wallet storage, audit logs</td>
+                        <td>LUKS-encrypted volumes, row-level security</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Fraud Detector</strong></td>
+                        <td>Real-time anomaly scanning</td>
+                        <td>Isolation Forest ML on transaction patterns</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Security Foundation</h3>
+                <ul class="feature-list">
+                    <li><strong>Kernel Isolation:</strong> SELinux confines blockchain processes</li>
+                    <li><strong>Networking:</strong> SDN micro-segments services</li>
+                    <li><strong>Storage:</strong> Ceph with LUKS encryption</li>
+                    <li><strong>Compliance:</strong> Built-in audit trails for GDPR and SOC 2</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture Diagram -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Deployment Architecture</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS Enterprise Cluster (3 Nodes)"
+        N1[DsecOS Node 1<br/>Master + Ceph MON]
+        N2[DsecOS Node 2<br/>Worker + Ceph OSD]
+        N3[DsecOS Node 3<br/>Worker + Ceph OSD]
+    end
+
+    subgraph "Application Layer"
+        ETH[Ethereum Node<br/>(Geth + Smart Contracts)]
+        API[Node.js FinTech API<br/>(Transactions + Compliance)]
+        DB[PostgreSQL<br/>(Encrypted Wallets & Logs)]
+    end
+
+    subgraph "Security & Monitoring"
+        AI[AI Fraud Detector<br/>(Prometheus + ML)]
+        LIC[License Server<br/>JWT Validation]
+    end
+
+    N1 <-->|Corosync HA| N2
+    N2 <--> N3
+    N1 --> CEPH[Ceph Cluster<br/>Erasure-Coded Storage]
+
+    ETH --> N1
+    API --> N2
+    DB --> N3
+    CEPH --> ETH
+    CEPH --> API
+    CEPH --> DB
+
+    AI --> ETH
+    AI --> API
+    LIC --> N1
+
+    style N1 fill:#121212,stroke:#00BFFF,color:#FFF
+    style ETH fill:#1E1E1E,stroke:#00BFFF,color:#FFF
+    style AI fill:#8B0000,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: User Journey -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Deployment Journey</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title Secure FinTech Blockchain Deployment Flow
+    section Provisioning
+      Activate Enterprise License: 5: FinTech Admin
+      PXE Deploy 3 Nodes: 5: DevOps Engineer
+      Join HA Cluster: 4: Auto-Scripted
+    section Configuration
+      Upload Custom Stack: 5: Admin UI
+      Configure Smart Contracts: 4: React Dashboard
+      Enable AI Fraud Rules: 4: Security Team
+    section Go-Live
+      Deploy Ethereum Node + API: 5: One-Click
+      Test Cross-Border TX: 5: QA
+      Monitor First 100 Transactions: 4: Grafana
+    section Operations
+      Auto-Scale on Load: 3: AI-Driven
+      Generate Compliance Report: 4: Audit
+      Zero-Downtime Upgrade: 5: Platform
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Steps -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Quick Start Deployment</h2>
+            
+            <h3>Prerequisites</h3>
+            <ul class="feature-list">
+                <li>DsecOS Enterprise license key</li>
+                <li>3x servers: 32 GB RAM, 8-core CPU, 1 TB NVMe each</li>
+                <li>Isolated VLAN for blockchain traffic</li>
+            </ul>
+
+            <h3>Step 1: Provision Nodes</h3>
+            <pre><code># On provisioning server
+/scripts/pxe-deploy.sh --cluster fintech-blockchain --nodes 3</code></pre>
+            <p style="color: #00CED1; margin-top: 10px;">⚡ Nodes auto-join Ceph + Corosync in 5 minutes</p>
+
+            <h3>Step 2: Activate License</h3>
+            <p>Navigate to <strong style="color: #00BFFF;">Settings > License</strong> in Web UI</p>
+            <ul class="feature-list">
+                <li>Enter license key</li>
+                <li>Validate via JWT server</li>
+                <li>Enable enterprise features (HA, AI)</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Stack Configuration -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Deploy Custom Stack</h2>
+            
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/ethereum-fintech.yml</code>:</p>
+
+            <pre><code>version: '3.8'
+services:
+  ethereum:
+    image: ethereum/client-go:latest
+    command: --http --http.addr 0.0.0.0 --http.port 8545
+    volumes:
+      - ceph-blockchain:/data
+    ports:
+      - "8545:8545"
+
+  api:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./fintech-api:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - ETHEREUM_RPC=http://ethereum:8545
+      - DB_URL=postgres://user:pass@db:5432/fintech
+    command: npm start
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: fintech
+      POSTGRES_PASSWORD: securepass
+    volumes:
+      - ceph-db:/var/lib/postgresql/data
+
+volumes:
+  ceph-blockchain:
+    driver: cephfs
+  ceph-db:
+    driver: cephfs</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy ethereum-fintech</code></pre>
+        </div>
+
+        <!-- Slide 8: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Performance & Security Metrics</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Transactions Per Second</div>
+                    <div class="metric-value">5,000+</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Settlement Time</div>
+                    <div class="metric-value">&lt;3 sec</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Fraud Detection</div>
+                    <div class="metric-value">98.7%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Encryption Overhead</div>
+                    <div class="metric-value">&lt;2%</div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h3>Security in Action</h3>
+                <ul class="feature-list">
+                    <li><strong>Transaction Security:</strong> Blockchain ensures tamper-proof records; SELinux prevents unauthorized access</li>
+                    <li><strong>Fraud Detection:</strong> AI flags anomalies with &lt;2s latency</li>
+                    <li><strong>Compliance:</strong> Auto-generate SOC 2 audits from Ceph logs</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: ROI -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>Mid-Sized FinTech Example (1M transactions/month)</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Costs</th>
+                            <th>With DsecOS</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Operating Costs</td>
+                            <td>$500,000</td>
+                            <td>$150,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">$350,000</td>
+                        </tr>
+                        <tr>
+                            <td>Transaction Fees</td>
+                            <td>High (intermediaries)</td>
+                            <td>80% lower</td>
+                            <td style="color: #00FF00; font-weight: bold;">Massive reduction</td>
+                        </tr>
+                        <tr>
+                            <td>Operational Speed</td>
+                            <td>Baseline</td>
+                            <td>40% faster</td>
+                            <td style="color: #00FF00; font-weight: bold;">Significant improvement</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="quote" style="margin-top: 40px;">
+                "Where Blockchain Meets Enterprise Security"
+            </div>
+
+            <div style="text-align: center; margin-top: 50px; font-size: 2em; color: #00BFFF; font-weight: bold;">
+                Total Annual Savings: $350,000+
+            </div>
+        </div>
+
+        <!-- Slide 10: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none;">Ready to Transform Your FinTech Operations?</h2>
+            <div class="metrics-grid" style="margin-top: 50px;">
+                <div class="metric-card">
+                    <div class="metric-label">Deployment</div>
+                    <div class="metric-value">&lt;15 min</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Security</div>
+                    <div class="metric-value">99.9%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">ROI</div>
+                    <div class="metric-value">$350K+</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">TPS</div>
+                    <div class="metric-value">5,000+</div>
+                </div>
+            </div>
+            <div style="margin-top: 60px; font-size: 1.3em; color: #00CED1;">
+                DsecOS Enterprise — Secure, Scalable, Compliant
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#00BFFF',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#00BFFF',
+                lineColor: '#00CED1',
+                secondaryColor: '#1E90FF',
+                tertiaryColor: '#0a0a0a'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        // Smooth scroll reveal animation
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+</body>
+</html>
