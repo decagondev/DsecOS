@@ -73,7 +73,7 @@ App live at: `http://your-server-ip:3000`
 
 ```bash
 git clone https://github.com/decagondev/DecaOS.git
-cd dsecos-private
+cd DecaOS
 ```
 
 ---
@@ -83,7 +83,7 @@ cd dsecos-private
 - SELinux: Enforcing by default
 - All traffic: Encrypted + authenticated
 - Regular Lynis scans: Target >90% compliance
-- Report issues: [security@dsecos.io](mailto:security@dsecos.io)
+- Report issues: [security@decadev.co.uk](mailto:security@decadev.co.uk)
 
 ---
 
