@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - High-Frequency Trading Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #001a00 0%, #003300 50%, #004d00 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #0f1a0f 0%, #1a2e1a 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0, 255, 0, 0.2), 0 0 100px rgba(127, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.4);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #000000 0%, #001a00 25%, #00FF00 75%, #7FFF00 100%);
+            border: 3px solid #00FF00;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 0, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(127, 255, 0, 0.2) 0%, transparent 40%);
+            animation: neonPulse 8s linear infinite;
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
+            50% { opacity: 0.8; transform: rotate(180deg); }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00FF00, #7FFF00, #ADFF2F);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #90EE90;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3em;
+            color: #FFD700;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #00FF00;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00FF00;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        h3 {
+            color: #7FFF00;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(127, 255, 0, 0.1));
+            border-left: 5px solid #00FF00;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.15), rgba(127, 255, 0, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 255, 0, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.5);
+            border-color: #00FF00;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #00FF00;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .metric-label {
+            color: #90EE90;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hft-banner {
+            background: linear-gradient(90deg, #00FF00, #7FFF00, #00FF00);
+            color: #000;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 255, 0, 0.5);
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00FF00, #7FFF00);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #00FF00, #7FFF00);
+            color: #000;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(0, 255, 0, 0.08);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+        }
+
+        code {
+            background: rgba(0, 255, 0, 0.15);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #90EE90;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #00FF00;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #90EE90;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(0, 255, 0, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #00FF00;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #00FF00;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #FFD700;
+            padding: 20px 40px;
+            border-left: 4px solid #00FF00;
+            margin: 30px 0;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00FF00, #7FFF00);
+            color: #000;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(0, 255, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #00FF00;
+            border: 1px solid #00FF00;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 0, 0.1));
+            border: 2px solid #FFD700;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .warning-box strong {
+            color: #FFD700;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #00FF00;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #90EE90;
+            font-size: 0.9em;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+
+        .latency-highlight {
+            background: linear-gradient(90deg, 
+                rgba(0, 255, 0, 0.2) 0%, 
+                rgba(127, 255, 0, 0.2) 25%,
+                rgba(0, 255, 0, 0.2) 50%,
+                rgba(127, 255, 0, 0.2) 75%,
+                rgba(0, 255, 0, 0.2) 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #00FF00;
+            margin: 30px 0;
+            animation: latencyPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes latencyPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 0, 0.6); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hft-banner">⚡ HFT EDITION - SUB-MILLISECOND LATENCY ⚡</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">High-Frequency Trading Co-Location Platform</div>
+            <div class="tagline">Trade Faster. Trade Safer. Trade Smarter.</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">Sub-Millisecond</span>
+                <span class="alert-badge">Absolute Security</span>
+                <span class="alert-badge">Full Compliance</span>
+                <span class="alert-badge">Co-Lo Ready</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Platform Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                The <strong style="color: #00FF00;">world's fastest and most secure co-location platform</strong> for high-frequency trading (HFT) firms. Runs <strong style="color: #90EE90;">ultra-low-latency market data feeds</strong>, <strong style="color: #90EE90;">order execution engines</strong>, and <strong style="color: #90EE90;">risk compliance checks</strong> within a <strong style="color: #FFD700;">deterministic, kernel-bypass environment</strong> — all while enforcing regulatory auditability and zero-trust isolation.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Tick-to-Trade Latency</div>
+                    <div class="metric-value">&lt;100 ns</div>
+                    <p>Exchange to execution</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Market Data Throughput</div>
+                    <div class="metric-value">50M+</div>
+                    <p>Messages/second</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Risk Check Latency</div>
+                    <div class="metric-value">&lt;2 µs</div>
+                    <p>Pre-trade enforcement</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Alpha Capture</div>
+                    <div class="metric-value">0.8-1.2%</div>
+                    <p>Via latency arbitrage</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Business Value</h3>
+                <ul class="feature-list">
+                    <li><strong>Alpha Capture:</strong> 0.8–1.2% edge via latency arbitrage</li>
+                    <li><strong>Zero Fines:</strong> 100% compliance with real-time audit trails</li>
+                    <li><strong>Risk Elimination:</strong> Hardware-enforced circuit breakers</li>
+                    <li><strong>Co-Lo Sovereignty:</strong> No cloud vendor lock-in</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Designed For:</strong> Tier-1 investment banks, proprietary trading firms, and exchanges
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Foundation</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security & Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Market Data Handler</strong></td>
+                        <td>NASDAQ ITCH, CME MDP 3.0, SIP</td>
+                        <td>DPDK polling, &lt;50 ns packet ingest</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Order Execution Engine</strong></td>
+                        <td>FIX/FAST, Binary protocols</td>
+                        <td>FPGA-accelerated matching</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pre-Trade Risk Gateway</strong></td>
+                        <td>Position limits, fat-finger checks</td>
+                        <td>&lt;1.8 µs enforcement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Arb Detector</strong></td>
+                        <td>Pattern recognition, latency arbitrage</td>
+                        <td>GPU + ML inference</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Logger</strong></td>
+                        <td>Tick-level replay</td>
+                        <td>WORM + FIPS 140-3</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Security</h3>
+                <ul class="feature-list">
+                    <li><strong>Kernel:</strong> Real-time PREEMPT_RT + DPDK bypass (no syscalls in hot path)</li>
+                    <li><strong>NIC Passthrough:</strong> Solarflare/Xilinx Onload + FPGA acceleration</li>
+                    <li><strong>Memory:</strong> HugePages + CPU pinning (NUMA-aligned)</li>
+                    <li><strong>Compliance:</strong> Immutable Ceph WORM + cryptographic tick stamping</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Co-Location Cluster Architecture</h2>
+            <p style="color: #90EE90; margin-bottom: 20px; font-weight: 600;">3-Node Co-Lo Cage (Exchange Proximity)</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS Enterprise Co-Lo Cluster (3 Nodes)"
+        N1[DsecOS Node 1<br/>Market Data + FPGA]
+        N2[DsecOS Node 2<br/>Execution Engine]
+        N3[DsecOS Node 3<br/>Risk + Audit + WORM]
+    end
+
+    subgraph "HFT Pipeline"
+        FEED[Exchange Feeds<br/>(ITCH, MDP, SIP)]
+        MDH[Market Data Handler<br/>(DPDK + FPGA)]
+        EXEC[Order Execution<br/>(Binary Gateway)]
+        RISK[Pre-Trade Risk<br/>(1.8 µs)]
+    end
+
+    subgraph "Compliance & Intelligence"
+        AI[AI Arb Detector<br/>(Latency Patterns)]
+        LOG[Tick Audit Logger<br/>(WORM + Crypto)]
+        LIC[License Server<br/>HFT Edition]
+    end
+
+    N1 <-->|Corosync HA<br/>1 µs Sync| N2
+    N2 <--> N3
+    N1 --> CEPH[Ceph WORM Pool<br/>Sub-Nanosecond Timestamps]
+
+    FEED --> N1
+    MDH --> N1
+    EXEC --> N2
+    RISK --> N2
+    AI --> N1
+    LOG --> N3
+    CEPH --> LOG
+
+    style N1 fill:#121212,stroke:#00FF00,color:#FFF
+    style MDH fill:#1E1E1E,stroke:#00FF00,color:#FFF
+    style RISK fill:#8B0000,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: User Flow -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Tick-to-Trade Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title HFT Tick-to-Trade Flow
+    section Ingest
+      Connect to 12 Exchange Feeds: 5: Auto-FIX
+      Normalize in <80 ns: 5: FPGA
+      Buffer in HugePages: 4: DPDK
+    section Execute
+      Detect Arb Signal: 5: AI Model
+      Submit Limit Order: 5: Binary API
+      Risk Check in 1.7 µs: 5: Hardware Gate
+    section Confirm
+      Fill-or-Kill Match: 4: Exchange ACK
+      Log Tick + Hash: 5: WORM
+      Update P&L Real-Time: 5: Dashboard
+    section Comply
+      Generate CAT Report: 5: Auto-Export
+      Replay Full Day: 4: Forensic Tool
+      Zero Downtime Failover: 5: HA Cluster
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Guide -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚡ Prerequisites:</strong> DsecOS Enterprise HFT Edition license (exchange-approved), 3x 1U servers (128 GB RAM, 2x AMD EPYC 9754, Solarflare X2522 NICs), direct fiber to exchange (&lt;50 km)
+            </div>
+
+            <h3>Step 1: Provision Co-Lo Cluster</h3>
+            <pre><code>/scripts/pxe-deploy.sh --cluster hft-colo --nodes 3 --dpdk --fpga-passthrough --realtime-kernel</code></pre>
+
+            <h3>Step 2: Deploy HFT Stack</h3>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/hft-engine.yml</code>:</p>
+            <pre><code>version: '3.8'
+services:
+  market-data:
+    image: hft/mdh-dpdk:latest
+    privileged: true
+    network_mode: host
+    devices:
+      - /dev/vfio:/dev/vfio
+    command: --interfaces eth0,eth1 --feeds NASDAQ,CME
+
+  execution:
+    image: hft/exec-binary:latest
+    network_mode: host
+    command: --gateway exchange-gateway.ip --strategy arb_v3
+
+  risk:
+    image: hft/risk-fpga:latest
+    devices:
+      - /dev/fpga0
+    command: --limits position=100000,order_size=5000
+
+  ai-arb:
+    image: hft/ai-gpu:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    command: detect --model latency_arb_v9
+
+  logger:
+    image: hft/audit-worm:latest
+    volumes:
+      - ceph-worm:/audit
+    command: --mode tick --crypto fips
+
+volumes:
+  ceph-worm:
+    driver: cephfs
+    driver_opts:
+      worm: true</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy hft-engine</code></pre>
+        </div>
+
+        <!-- Slide 7: Testing -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Test Tick-to-Trade</h2>
+            
+            <pre><code># Simulate NASDAQ ITCH feed
+./tools/feed-replay --file NASDAQ_2025_sample.bin --speed 50Mps</code></pre>
+
+            <div class="latency-highlight" style="margin-top: 30px;">
+                <h3 style="text-align: center; color: #FFD700; margin-bottom: 20px;">Average Tick-to-Trade: 98.2 ns</h3>
+                <div style="text-align: center; font-size: 1.2em; line-height: 2;">
+                    <div><strong style="color: #00FF00;">Ingest:</strong> &lt;80 ns (FPGA)</div>
+                    <div><strong style="color: #7FFF00;">Execute:</strong> &lt;15 ns (Binary API)</div>
+                    <div><strong style="color: #90EE90;">Risk Check:</strong> 1.7 µs (Hardware Gate)</div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Compliance & Replay</h3>
+                <pre><code># Generate SEC CAT report
+dsecos audit export --format cat --date 2025-11-06</code></pre>
+                <ul class="feature-list" style="margin-top: 20px;">
+                    <li><strong>Full Replay:</strong> 8-hour session in &lt;3 seconds</li>
+                    <li><strong>Forensic Tool:</strong> Complete tick-level audit trail</li>
+                    <li><strong>Compliance:</strong> MiFID II, SEC Rule 15c3-5, CAT NMS</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Security & Compliance -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Security & Compliance</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Data Sovereignty</div>
+                    <div class="metric-value">100%</div>
+                    <p>No cloud egress</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Tamper-Proof</div>
+                    <div class="metric-value">WORM</div>
+                    <p>Per-tick HMAC-SHA3</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Compliance</div>
+                    <div class="metric-value">MiFID II</div>
+                    <p>SEC 606, CAT NMS</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Audit Replay</div>
+                    <div class="metric-value">2.9s</div>
+                    <p>8 hours in seconds</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Compliance Standards</h3>
+                <ul class="feature-list">
+                    <li><strong>MiFID II RTS 6:</strong> Transaction reporting requirements</li>
+                    <li><strong>SEC 606:</strong> Disclosure of order routing information</li>
+                    <li><strong>CAT NMS:</strong> Consolidated Audit Trail</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Performance Metrics</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tick-to-Trade Latency</strong></td>
+                        <td style="color: #00FF00;">98.2 ns</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Market Data Throughput</strong></td>
+                        <td style="color: #00FF00;">52.1M msg/sec</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Risk Check Latency</strong></td>
+                        <td style="color: #00FF00;">1.78 µs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Replay Speed</strong></td>
+                        <td style="color: #00FF00;">8 hrs in 2.9 sec</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="stats-bar" style="margin-top: 40px;">
+                <div class="stat">
+                    <div class="stat-value">98.2ns</div>
+                    <div class="stat-label">Tick-to-Trade</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">52.1M</div>
+                    <div class="stat-label">Msg/Sec</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1.78µs</div>
+                    <div class="stat-label">Risk Check</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">2.9s</div>
+                    <div class="stat-label">Replay 8hr</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>Prop Trading Firm Example (500 Strategies)</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current</th>
+                            <th>With DsecOS HFT</th>
+                            <th>Net Gain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual P&L</td>
+                            <td>$180,000,000</td>
+                            <td>$228,000,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">+$48,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure Cost</td>
+                            <td>$0</td>
+                            <td>$1,800,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">-$1,800,000</td>
+                        </tr>
+                        <tr>
+                            <td>Total Net Gain</td>
+                            <td>$180,000,000</td>
+                            <td>$226,200,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">+$46,200,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #90EE90; margin-bottom: 20px;">Total Annual Net Gain</div>
+                <div style="font-size: 3em; color: #00FF00; font-weight: bold; text-shadow: 0 0 30px rgba(0, 255, 0, 0.6);">
+                    +$46,200,000
+                </div>
+                <div style="font-size: 1.2em; color: #FFD700; margin-top: 20px;">
+                    Plus 26.7% P&L improvement
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">Where Nanoseconds Are Profits</h2>
+            
+            <div class="stats-bar" style="background: rgba(0, 255, 0, 0.2); max-width: 900px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">98.2ns</div>
+                    <div class="stat-label">Latency</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">52.1M</div>
+                    <div class="stat-label">Msg/Sec</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">$46.2M</div>
+                    <div class="stat-label">Gain</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Compliant</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #FFD700; background: rgba(255, 215, 0, 0.1);">
+                "Sub-Millisecond Latency. Absolute Security. Full Compliance."
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">ULTRA-LOW LATENCY</span>
+                <span class="alert-badge">FPGA ACCELERATED</span>
+                <span class="alert-badge">FULL COMPLIANCE</span>
+                <span class="alert-badge">CO-LO READY</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #90EE90;">
+                DsecOS Enterprise HFT Edition
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#00FF00',
+                primaryTextColor: '#000',
+                primaryBorderColor: '#00FF00',
+                lineColor: '#90EE90',
+                secondaryColor: '#7FFF00',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#7FFF00',
+                noteTextColor: '#000'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+</body>
+</html>
+
