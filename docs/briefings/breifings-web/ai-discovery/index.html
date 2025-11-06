@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - AI Drug Discovery Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a1a0f 0%, #0d2818 50%, #1a3d2e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #0f1a14 0%, #1a2e24 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0, 217, 165, 0.2), 0 0 100px rgba(0, 206, 209, 0.1);
+            border: 1px solid rgba(0, 217, 165, 0.4);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #000000 0%, #0a1a0f 25%, #00D9A5 75%, #00CED1 100%);
+            border: 3px solid #00D9A5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 217, 165, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 206, 209, 0.2) 0%, transparent 40%);
+            animation: moleculePulse 8s linear infinite;
+        }
+
+        @keyframes moleculePulse {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
+            50% { opacity: 0.6; transform: rotate(180deg); }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00D9A5, #00CED1, #20B2AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(0, 217, 165, 0.5);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #7FFFD4;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3em;
+            color: #FFD700;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #00D9A5;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00D9A5;
+            text-shadow: 0 0 20px rgba(0, 217, 165, 0.5);
+        }
+
+        h3 {
+            color: #00CED1;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 217, 165, 0.1), rgba(0, 206, 209, 0.1));
+            border-left: 5px solid #00D9A5;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 217, 165, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 217, 165, 0.15), rgba(0, 206, 209, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 217, 165, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 217, 165, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 217, 165, 0.5);
+            border-color: #00D9A5;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #00D9A5;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(0, 217, 165, 0.5);
+        }
+
+        .metric-label {
+            color: #7FFFD4;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pharma-banner {
+            background: linear-gradient(90deg, #00CED1, #00D9A5, #00CED1);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 217, 165, 0.5);
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00D9A5, #00CED1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(0, 217, 165, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #00D9A5, #00CED1);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 217, 165, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(0, 217, 165, 0.08);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(0, 217, 165, 0.3);
+            box-shadow: 0 0 30px rgba(0, 217, 165, 0.15);
+        }
+
+        code {
+            background: rgba(0, 217, 165, 0.15);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #7FFFD4;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #00D9A5;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 217, 165, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #7FFFD4;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(0, 217, 165, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #00D9A5;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #00D9A5;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #FFD700;
+            padding: 20px 40px;
+            border-left: 4px solid #00D9A5;
+            margin: 30px 0;
+            background: rgba(0, 217, 165, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00D9A5, #00CED1);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 217, 165, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 217, 165, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(0, 217, 165, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #00D9A5;
+            border: 1px solid #00D9A5;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 217, 165, 0.1));
+            border: 2px solid #FFD700;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .warning-box strong {
+            color: #FFD700;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 217, 165, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 217, 165, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #00D9A5;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #7FFFD4;
+            font-size: 0.9em;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="pharma-banner">🧬 PHARMA EDITION - FDA/EMA COMPLIANT 🧬</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">AI-Powered Drug Discovery Platform</div>
+            <div class="tagline">From Molecule to Model in Minutes</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">Accelerated R&D</span>
+                <span class="alert-badge">Secure</span>
+                <span class="alert-badge">Scalable AI</span>
+                <span class="alert-badge">FDA Ready</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Platform Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                DsecOS Enterprise provides the <strong style="color: #00D9A5;">secure, high-performance platform</strong> for an AI-driven drug discovery pipeline. It integrates <strong style="color: #7FFFD4;">AlphaFold 3</strong>, <strong style="color: #7FFFD4;">molecular docking (AutoDock Vina)</strong>, and <strong style="color: #7FFFD4;">generative chemistry models</strong> to screen millions of compounds against target proteins — all within a zero-trust, compliant environment.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Screening Speed</div>
+                    <div class="metric-value">10,000x</div>
+                    <p>Faster than wet-lab</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Cost Reduction</div>
+                    <div class="metric-value">90%</div>
+                    <p>Vs. physical assays</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Deployment Time</div>
+                    <div class="metric-value">&lt;20 min</div>
+                    <p>Full cluster</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">R&D Timeline</div>
+                    <div class="metric-value">Years → Months</div>
+                    <p>Accelerated</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Business Value</h3>
+                <ul class="feature-list">
+                    <li><strong>Reduce R&D Timeline:</strong> From years to months</li>
+                    <li><strong>Cut Screening Costs:</strong> 90% reduction vs. physical assays</li>
+                    <li><strong>Secure Collaboration:</strong> Global research teams with IP protection</li>
+                    <li><strong>Regulatory-Ready:</strong> FDA/EMA compliant from day one</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Designed For:</strong> Biotech and pharmaceutical companies requiring secure, scalable AI infrastructure for drug discovery
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Foundation</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>AlphaFold 3</strong></td>
+                        <td>Protein structure prediction</td>
+                        <td>GPU-bound, rootless, seccomp-restricted</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AutoDock Vina</strong></td>
+                        <td>Molecular docking & binding affinity</td>
+                        <td>Isolated per-job containers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Generative AI (ChemBERTa)</strong></td>
+                        <td>De novo molecule generation</td>
+                        <td>Encrypted model weights</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PostgreSQL + Vector DB</strong></td>
+                        <td>Compound + result storage</td>
+                        <td>Row-level security, encrypted at rest</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Security</h3>
+                <ul class="feature-list">
+                    <li><strong>GPU Isolation:</strong> PCI passthrough + NVIDIA container toolkit with SELinux gpu_t</li>
+                    <li><strong>Data Security:</strong> LUKS-encrypted Ceph volumes for proprietary compound libraries</li>
+                    <li><strong>Orchestration:</strong> LXC containers with resource quotas for parallel docking jobs</li>
+                    <li><strong>Compliance:</strong> Immutable logs + tamper-proof audit trails</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Cluster Architecture</h2>
+            <p style="color: #7FFFD4; margin-bottom: 20px; font-weight: 600;">8-Node GPU Cluster (On-Prem or Hybrid)</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS Enterprise Cluster (8 Nodes)"
+        N1[DsecOS Node 1<br/>Master + Ceph MON]
+        N2[DsecOS Node 2<br/>AlphaFold GPU]
+        N3[DsecOS Node 3<br/>Docking Worker GPU]
+        N4[DsecOS Node 4<br/>AI Generator GPU]
+        N5[DsecOS Node 5<br/>Ceph OSD + NVMe]
+        N6[DsecOS Node 6<br/>Ceph OSD + NVMe]
+        N7[DsecOS Node 7<br/>Ceph OSD + NVMe]
+        N8[DsecOS Node 8<br/>Jupyter + Results]
+    end
+
+    subgraph "AI Drug Discovery Pipeline"
+        AF[AlphaFold 3<br/>(Structure Prediction)]
+        DOCK[AutoDock Vina<br/>(Docking Engine)]
+        GEN[ChemBERTa<br/>(Molecule Generator)]
+        JUP[JupyterLab<br/>(Orchestration)]
+    end
+
+    subgraph "Data & Compliance"
+        DB[PostgreSQL + PGVector<br/>(Compounds + Embeddings)]
+        AI[AI Scorer<br/>(Binding Prediction)]
+        LIC[License Server]
+    end
+
+    N1 <-->|Corosync HA| N2
+    N2 <--> N3
+    N3 <--> N4
+    N1 --> CEPH[Ceph Cluster<br/>Encrypted NVMe Pool]
+
+    AF --> N2
+    DOCK --> N3
+    GEN --> N4
+    JUP --> N8
+    DB --> N5
+    AI --> N6
+    CEPH --> AF
+    CEPH --> DB
+    CEPH --> GEN
+
+    AI --> DOCK
+    LIC --> N1
+
+    style N1 fill:#121212,stroke:#00D9A5,color:#FFF
+    style AF fill:#1E1E1E,stroke:#00D9A5,color:#FFF
+    style AI fill:#8B0000,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: User Flow -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Drug Discovery Pipeline Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title AI Drug Discovery Pipeline Flow
+    section Cluster Setup
+      Activate Pharma License: 5: R&D Director
+      PXE Deploy 8 GPU Nodes: 5: BioIT
+      Enable GPU Passthrough: 4: Auto-Ansible
+    section Pipeline Launch
+      Upload Target Protein (PDB): 5: JupyterLab
+      Run AlphaFold Prediction: 5: One-Click
+      Generate 1M Candidates: 4: ChemBERTa
+    section Screening
+      Parallel Docking (100k/hr): 5: AutoDock
+      AI Rank Binding Affinity: 4: ML Scorer
+      Select Top 100 Hits: 4: Visualization
+    section Validation
+      Export for Wet Lab: 3: Secure PDF
+      Generate FDA Audit Log: 5: Compliance Officer
+      Archive to Immutable Storage: 5: Ceph Snapshots
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Guide -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚡ Prerequisites:</strong> DsecOS Enterprise Pharma Edition license, 8x servers (128 GB RAM, 2x NVIDIA A100, 4 TB NVMe), 100 Gbps network
+            </div>
+
+            <h3>Step 1: Provision Cluster</h3>
+            <pre><code>/scripts/pxe-deploy.sh --cluster drug-discovery --nodes 8 --gpu a100 --ceph-tier nvme</code></pre>
+
+            <h3>Step 2: Deploy Custom Stack</h3>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/drug-discovery.yml</code>:</p>
+            <pre><code>version: '3.8'
+services:
+  alphafold:
+    image: ghcr.io/deepmind/alphafold:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - ceph-proteins:/data
+    command: --fasta_paths=/data/target.fasta --output_dir=/data/output
+
+  docking:
+    image: gnina/gnina:latest
+    volumes:
+      - ceph-library:/library
+    command: --receptor protein.pdbqt --ligand batch.sdf --autobox_ligand
+
+  generator:
+    image: moseleybioinformatics-lab/chemmodel:latest
+    volumes:
+      - ceph-models:/models
+    command: generate --target smiles --count 1000000
+
+  jupyter:
+    image: jupyter/scipy-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ceph-notebooks:/home/jovyan
+
+volumes:
+  ceph-proteins:
+    driver: cephfs
+  ceph-library:
+    driver: cephfs
+  ceph-models:
+    driver: cephfs
+  ceph-notebooks:
+    driver: cephfs</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy drug-discovery</code></pre>
+        </div>
+
+        <!-- Slide 7: Pipeline Execution -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Run Pipeline</h2>
+            
+            <p style="font-size: 1.1em; margin-bottom: 20px;">In JupyterLab (<code>https://your-ip:8888</code>):</p>
+
+            <pre><code># Predict structure
+!alphafold --fasta target.fasta
+
+# Screen 1M compounds
+!gnina --receptor output.pdbqt --ligand library.sdf --exhaustiveness 16
+
+# AI scoring
+results = ai_model.predict(docked_poses)
+top_hits = results.nlargest(100, 'binding_affinity')</code></pre>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Export & Compliance</h3>
+                <ul class="feature-list">
+                    <li><strong>FDA-Ready Report:</strong> Generate via UI with full audit trail</li>
+                    <li><strong>WORM Storage:</strong> Archive to immutable Ceph bucket</li>
+                    <li><strong>Regulatory Compliance:</strong> 21 CFR Part 11, GxP-ready</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Security & Compliance -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Security & Compliance</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">IP Protection</div>
+                    <div class="metric-value">100%</div>
+                    <p>Model weights encrypted</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Audit Trail</div>
+                    <div class="metric-value">Crypto Hash</div>
+                    <p>Every job logged</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Compliance</div>
+                    <div class="metric-value">21 CFR</div>
+                    <p>Part 11, GxP-ready</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Encryption Overhead</div>
+                    <div class="metric-value">&lt;1%</div>
+                    <p>Minimal impact</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Security Features</h3>
+                <ul class="feature-list">
+                    <li><strong>IP Protection:</strong> Model weights encrypted; SELinux blocks exfiltration</li>
+                    <li><strong>Audit Trail:</strong> Every job logged with cryptographic hash</li>
+                    <li><strong>Compliance:</strong> 21 CFR Part 11, GxP-ready for FDA/EMA submissions</li>
+                    <li><strong>Data Sovereignty:</strong> All data encrypted at rest and in transit</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Performance Metrics</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>DsecOS Platform</th>
+                        <th>Traditional Methods</th>
+                        <th>Advantage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Structure Prediction</strong></td>
+                        <td style="color: #00FF00;">2.1 hours</td>
+                        <td>3 days (CPU)</td>
+                        <td>34x faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Docking Speed</strong></td>
+                        <td style="color: #00FF00;">120,000 ligands/hour</td>
+                        <td>1,200/hour</td>
+                        <td>100x faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hit Rate Improvement</strong></td>
+                        <td style="color: #00FF00;">+18%</td>
+                        <td>Baseline</td>
+                        <td>AI scoring</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Screening Speed</strong></td>
+                        <td style="color: #00FF00;">10,000x</td>
+                        <td>Wet-lab baseline</td>
+                        <td>Massive acceleration</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="stats-bar" style="margin-top: 40px;">
+                <div class="stat">
+                    <div class="stat-value">2.1h</div>
+                    <div class="stat-label">Structure Prediction</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">120K/hr</div>
+                    <div class="stat-label">Docking Speed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">+18%</div>
+                    <div class="stat-label">Hit Rate</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">&lt;1%</div>
+                    <div class="stat-label">Encryption Overhead</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>Mid-Sized Pharma Example (12 Targets/Year)</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Costs</th>
+                            <th>With DsecOS</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Operating Costs</td>
+                            <td>$8,400,000</td>
+                            <td>$1,200,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">$7,200,000</td>
+                        </tr>
+                        <tr>
+                            <td>Time to Clinic</td>
+                            <td>Baseline</td>
+                            <td>6 months faster</td>
+                            <td style="color: #00FF00; font-weight: bold;">Accelerated</td>
+                        </tr>
+                        <tr>
+                            <td>Screening Efficiency</td>
+                            <td>Traditional methods</td>
+                            <td>10,000x faster</td>
+                            <td style="color: #00FF00; font-weight: bold;">Massive improvement</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #7FFFD4; margin-bottom: 20px;">Total Annual Savings</div>
+                <div style="font-size: 3em; color: #00D9A5; font-weight: bold; text-shadow: 0 0 30px rgba(0, 217, 165, 0.6);">
+                    $7,200,000+
+                </div>
+                <div style="font-size: 1.2em; color: #FFD700; margin-top: 20px;">
+                    Plus 6 months faster to clinic
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">Accelerated Pharmaceutical R&D</h2>
+            
+            <div class="stats-bar" style="background: rgba(0, 217, 165, 0.2); max-width: 900px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">10,000x</div>
+                    <div class="stat-label">Faster</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">90%</div>
+                    <div class="stat-label">Cost Cut</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">$7.2M</div>
+                    <div class="stat-label">Savings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">FDA</div>
+                    <div class="stat-label">Ready</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #FFD700; background: rgba(255, 215, 0, 0.1);">
+                "From Molecule to Model in Minutes"
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">SECURE</span>
+                <span class="alert-badge">SCALABLE</span>
+                <span class="alert-badge">COMPLIANT</span>
+                <span class="alert-badge">AI-POWERED</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #7FFFD4;">
+                DsecOS Enterprise Pharma Edition
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#00D9A5',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#00D9A5',
+                lineColor: '#7FFFD4',
+                secondaryColor: '#00CED1',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#00CED1',
+                noteTextColor: '#fff'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+</body>
+</html>
+
