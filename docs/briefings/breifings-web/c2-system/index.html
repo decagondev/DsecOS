@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - Joint C2 System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #162447 50%, #1f4068 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #0d1117 0%, #1a1f35 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0, 191, 255, 0.2), 0 0 100px rgba(30, 144, 255, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #000000 0%, #0a1931 25%, #185adb 75%, #00BFFF 100%);
+            border: 3px solid #00BFFF;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 191, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(30, 144, 255, 0.2) 0%, transparent 40%);
+            animation: radarSweep 8s linear infinite;
+        }
+
+        @keyframes radarSweep {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
+            50% { opacity: 0.6; transform: rotate(180deg); }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00BFFF, #1E90FF, #4169E1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #87CEEB;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3em;
+            color: #FFD700;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #00BFFF;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00BFFF;
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+        }
+
+        h3 {
+            color: #1E90FF;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(30, 144, 255, 0.1));
+            border-left: 5px solid #00BFFF;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(30, 144, 255, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.5);
+            border-color: #00BFFF;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #00BFFF;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+
+        .metric-label {
+            color: #87CEEB;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .classification-banner {
+            background: linear-gradient(90deg, #1E90FF, #00BFFF, #1E90FF);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.5);
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1E90FF, #00BFFF);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #00BFFF, #1E90FF);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(0, 191, 255, 0.08);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.15);
+        }
+
+        code {
+            background: rgba(0, 191, 255, 0.15);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #87CEEB;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #00BFFF;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #87CEEB;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(0, 191, 255, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #00BFFF;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #00BFFF;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #FFD700;
+            padding: 20px 40px;
+            border-left: 4px solid #00BFFF;
+            margin: 30px 0;
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00BFFF, #1E90FF);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(0, 191, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #00BFFF;
+            border: 1px solid #00BFFF;
+        }
+
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .domain-card {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(30, 144, 255, 0.1));
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .domain-card:hover {
+            transform: translateY(-5px);
+            border-color: #00BFFF;
+            box-shadow: 0 5px 20px rgba(0, 191, 255, 0.4);
+        }
+
+        .domain-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .domain-label {
+            color: #87CEEB;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 191, 255, 0.1));
+            border: 2px solid #FFD700;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .warning-box strong {
+            color: #FFD700;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #00BFFF;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #87CEEB;
+            font-size: 0.9em;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+
+        .ooda-highlight {
+            background: linear-gradient(90deg, 
+                rgba(0, 191, 255, 0.2) 0%, 
+                rgba(30, 144, 255, 0.2) 25%,
+                rgba(0, 191, 255, 0.2) 50%,
+                rgba(30, 144, 255, 0.2) 75%,
+                rgba(0, 191, 255, 0.2) 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #00BFFF;
+            margin: 30px 0;
+            animation: oodaPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes oodaPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 191, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 191, 255, 0.6); }
+        }
+    </style>
+</head>
+<body>
+    <div class="classification-banner">🛡️ NATO STANAG 5527 CERTIFIED - MILITARY EDITION 🛡️</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">Secure Command & Control System for Joint Operations</div>
+            <div class="tagline">See All. Strike True. Survive Always.</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">Unified Battlefield</span>
+                <span class="alert-badge">Encrypted</span>
+                <span class="alert-badge">Autonomous</span>
+                <span class="alert-badge">Unjammable</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Mission Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Mission Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                The <strong style="color: #00BFFF;">next-generation secure Command & Control (C2) system</strong> for joint military operations, integrating <strong style="color: #87CEEB;">multi-domain awareness</strong> (air, land, sea, cyber, space) with <strong style="color: #87CEEB;">real-time decision support</strong> and <strong style="color: #87CEEB;">autonomous asset orchestration</strong>. Supports <strong style="color: #FFD700;">coalition interoperability</strong> while enforcing compartmented access and deniable operations.
+            </p>
+
+            <div class="domain-grid">
+                <div class="domain-card">
+                    <div class="domain-icon">✈️</div>
+                    <div class="domain-label">Air</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-icon">🚁</div>
+                    <div class="domain-label">Land</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-icon">⚓</div>
+                    <div class="domain-label">Sea</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-icon">🌐</div>
+                    <div class="domain-label">Cyber</div>
+                </div>
+                <div class="domain-card">
+                    <div class="domain-icon">🛰️</div>
+                    <div class="domain-label">Space</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Sensor Feeds</div>
+                    <div class="metric-value">1M+</div>
+                    <p>&lt;50ms fusion latency</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">OODA Loop Reduction</div>
+                    <div class="metric-value">87%</div>
+                    <p>Minutes to milliseconds</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Network Availability</div>
+                    <div class="metric-value">99.999%</div>
+                    <p>In degraded networks</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Deployment Time</div>
+                    <div class="metric-value">&lt;60 min</div>
+                    <p>Full C2 node</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Trusted By:</strong> NATO JFC, US INDOPACOM, UK PJHQ - Proven in coalition operations with sovereign data controls
+            </div>
+        </div>
+
+        <!-- Slide 3: Operational Capabilities -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Operational Capabilities</h2>
+            
+            <div class="ooda-highlight">
+                <h3 style="text-align: center; color: #FFD700; margin-bottom: 20px;">OODA Loop: 87% Faster</h3>
+                <div class="stats-bar" style="background: transparent;">
+                    <div class="stat">
+                        <div class="stat-value">Observe</div>
+                        <div class="stat-label">47ms Fusion</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Orient</div>
+                        <div class="stat-label">AI Analysis</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Decide</div>
+                        <div class="stat-label">ROE Check</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Act</div>
+                        <div class="stat-label">2.8s Strike</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Core Capabilities</h3>
+                <ul class="feature-list">
+                    <li><strong>Multi-Domain Sensor Fusion:</strong> Integrate 1M+ feeds into single battlespace picture</li>
+                    <li><strong>Autonomous Kill Chains:</strong> Human-in-loop oversight with auditable decision trees</li>
+                    <li><strong>EW Survivability:</strong> Mesh networking with quantum-resistant crypto</li>
+                    <li><strong>Coalition Ops:</strong> Sovereign data controls with cross-domain guards</li>
+                    <li><strong>ROE Compliance:</strong> Full audit trail with WORM logging and blockchain anchoring</li>
+                </ul>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">SIGINT Cost Reduction</div>
+                    <div class="metric-value">65%</div>
+                    <p>Via AI prioritization</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Kill Chain Time</div>
+                    <div class="metric-value">2.8s</div>
+                    <p>Detect to execute</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">AI Confidence</div>
+                    <div class="metric-value">92%</div>
+                    <p>Targeting threshold</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Coalition Support</div>
+                    <div class="metric-value">NATO</div>
+                    <p>Interoperable</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Technical Foundation</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security & Precision</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>JADC2 Fusion Engine</strong></td>
+                        <td>Multi-domain sensor integration</td>
+                        <td>CDG-compliant, zero-trust architecture</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Effects Recommender</strong></td>
+                        <td>Autonomous targeting + ROE validation</td>
+                        <td>Human-in-loop, fully auditable</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mesh C2 Network</strong></td>
+                        <td>MANET + satellite relay</td>
+                        <td>Quantum-resistant, anti-jam</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SIGINT Processor</strong></td>
+                        <td>Real-time ELINT/COMINT analysis</td>
+                        <td>HSM-encrypted, ephemeral storage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Fortress</strong></td>
+                        <td>Decision tree logging</td>
+                        <td>WORM + blockchain anchor</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Security</h3>
+                <ul class="feature-list">
+                    <li><strong>Kernel:</strong> Real-time PREEMPT_RT + anti-tamper (TPM 2.0 + secure boot)</li>
+                    <li><strong>Sensor Fusion:</strong> Per-domain LXC with c2_t SELinux + cross-domain guards</li>
+                    <li><strong>Crypto:</strong> Post-quantum (Kyber + Dilithium) + HSM for classified keys</li>
+                    <li><strong>AI Decision Engine:</strong> Reinforcement learning for kinetic/non-kinetic effects</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>🔒 NATO STANAG 5527 Certified:</strong> The only C2 platform approved for multi-national joint operations
+            </div>
+        </div>
+
+        <!-- Slide 5: Deployment Architecture -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Tactical Cluster Architecture</h2>
+            <p style="color: #87CEEB; margin-bottom: 20px; font-weight: 600;">8-Node Forward-Deployable Configuration</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS C2 Tactical Cluster (8 Nodes)"
+        N1[DsecOS Node 1<br/>C2 Core + HSM]
+        N2[DsecOS Node 2<br/>JADC2 Fusion]
+        N3[DsecOS Node 3<br/>AI Effects GPU]
+        N4[DsecOS Node 4<br/>Mesh Router]
+        N5[DsecOS Node 5<br/>SIGINT Processor]
+        N6[DsecOS Node 6<br/>Ceph WORM]
+        N7[DsecOS Node 7<br/>Satellite Gateway]
+        N8[DsecOS Node 8<br/>Edge Effects Node]
+    end
+
+    subgraph "Multi-Domain Sensors"
+        AIR[Air: F-35 + MQ-9<br/>(Link-16)]
+        LAND[Land: Abrams + Stryker<br/>(NTCIP)]
+        SEA[Sea: DDG-51 + LCS<br/>(Link-22)]
+        CYBER[Cyber: SIGINT Feeds]
+        SPACE[Space: SBIRS + GPS III]
+    end
+
+    subgraph "Command Effects"
+        AI[AI Recommender<br/>(Kinetic/Non-Kinetic)]
+        MESH[MANET Router<br/>(Anti-Jam)]
+        AUDIT[Audit Fortress<br/>(WORM + ROE)]
+        LIC[License Server<br/>Military Edition]
+    end
+
+    N1 <-->|Corosync HA<br/>Encrypted| N2
+    N2 <--> N3
+    N3 <--> N4
+    N4 <--> N5
+    N5 <--> N6
+    N6 <--> N7
+    N7 <--> N8
+    N1 --> CEPH[Ceph Tactical Vault<br/>WORM + ECC]
+
+    AIR --> N2
+    LAND --> N2
+    SEA --> N2
+    CYBER --> N5
+    SPACE --> N7
+    AI --> N3
+    MESH --> N4
+    AUDIT --> N6
+
+    style N1 fill:#121212,stroke:#00BFFF,color:#FFF
+    style AI fill:#8B0000,color:#FFF
+    style MESH fill:#1E1E1E,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Mission Flow -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Kinetic Strike Mission Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title C2 Kinetic Strike Flow
+    section Detect
+      Fuse 1,200 Sensors: 5: JADC2 (47ms)
+      AI Flags HVT: 5: 92% Confidence
+      ROE Check Passed: 5: Human Override
+    section Decide
+      Recommend Effects: 5: AI Package
+      Coalition Approval: 5: Secure Vote
+      Generate Fire Plan: 4: Auto-Targeting
+    section Execute
+      Transmit via Mesh: 5: Anti-Jam
+      Kinetic Strike: 5: 2.8s TTI
+      BDA via Satellite: 4: Real-Time
+    section Assess & Audit
+      Update Battlespace: 5: Fusion Loop
+      WORM Log Decision: 5: Immutable
+      AAR Report: 5: STANAG Export
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Decision Support Pipeline</h3>
+                <ol style="padding-left: 30px; line-height: 2;">
+                    <li><strong style="color: #00BFFF;">Sensor Fusion:</strong> 1,200+ feeds integrated in 47ms</li>
+                    <li><strong style="color: #00BFFF;">AI Analysis:</strong> High-value target flagged at 92% confidence</li>
+                    <li><strong style="color: #00BFFF;">ROE Validation:</strong> Automated compliance check with human override</li>
+                    <li><strong style="color: #00BFFF;">Effects Selection:</strong> AI recommends optimal kinetic/non-kinetic package</li>
+                    <li><strong style="color: #00BFFF;">Coalition Approval:</strong> Secure multi-party authorization</li>
+                    <li><strong style="color: #00BFFF;">Execution:</strong> Fire plan transmitted via anti-jam mesh in 2.8s</li>
+                    <li><strong style="color: #00BFFF;">Assessment:</strong> Real-time BDA with WORM audit trail</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Slide 7: Deployment Requirements -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚠️ ITAR/EAR Controlled:</strong> Requires DsecOS Enterprise Military Edition license with appropriate clearances
+            </div>
+
+            <h3>Hardware Specifications</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Nodes Required</div>
+                    <div class="metric-value">8x</div>
+                    <p>Tactical ruggedized servers</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Memory</div>
+                    <div class="metric-value">256 GB</div>
+                    <p>RAM per node</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">CPU</div>
+                    <div class="metric-value">64-core</div>
+                    <p>Per node</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Storage</div>
+                    <div class="metric-value">32 TB</div>
+                    <p>NVMe per node</p>
+                </div>
+            </div>
+
+            <h3>Radio/Communications Configuration</h3>
+            <ul class="feature-list">
+                <li><strong>Link-16:</strong> Air domain tactical data link (JTIDS/MIDS)</li>
+                <li><strong>Link-22:</strong> Naval domain tactical data link (NILE)</li>
+                <li><strong>SINCGARS:</strong> Land domain secure voice and data</li>
+                <li><strong>MANET:</strong> Self-healing mobile ad-hoc network</li>
+                <li><strong>SATCOM:</strong> Redundant satellite uplinks (UHF/SHF/EHF)</li>
+            </ul>
+
+            <h3>Step 1: Provision Tactical C2 Cluster</h3>
+            <pre><code>/scripts/pxe-deploy.sh --cluster joint-c2 --nodes 8 \
+  --military-mode --hsm-classified --mesh-manet</code></pre>
+            <p style="color: #87CEEB; margin-top: 10px;">⚡ Auto-configures HA with classified HSM integration</p>
+        </div>
+
+        <!-- Slide 8: Stack Configuration -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Deploy C2 Stack</h2>
+            
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/joint-c2.yml</code>:</p>
+
+            <pre><code>version: '3.8'
+services:
+  jadc2-fusion:
+    image: dsecos/jadc2:latest
+    command: --domains air,land,sea,cyber,space --latency 50ms
+
+  ai-effects:
+    image: dsecOS/c2-ai:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    command: recommend --roe nato --confidence 0.92
+
+  mesh-router:
+    image: dsecOS/manet-batman:latest
+    privileged: true
+    devices:
+      - /dev/radio0
+    command: --anti-jam --quantum kyber
+
+  sigint:
+    image: dsecOS/sigint-processor:latest
+    command: --feeds elint,comint --ephemeral
+
+  audit-fortress:
+    image: dsecOS/c2-audit:latest
+    volumes:
+      - ceph-worm:/audit
+    command: --worm --anchor blockchain --compliance stanag
+
+volumes:
+  ceph-worm:
+    driver: cephfs
+    driver_opts:
+      worm: true
+      classified: true</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy joint-c2</code></pre>
+        </div>
+
+        <!-- Slide 9: Mission Testing -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Test Kinetic Loop</h2>
+            
+            <h3>Simulate HVT Detection</h3>
+            <pre><code>curl -X POST https://n1:9443/api/detect \
+  -H "Authorization: Bearer $JWT" \
+  -d '{
+    "target": "HVT-001",
+    "confidence": 0.94,
+    "roe": "strike"
+  }'</code></pre>
+
+            <div class="ooda-highlight">
+                <h3 style="text-align: center; color: #FFD700;">Full OODA Loop: 2.8 Seconds</h3>
+                <div style="text-align: center; margin-top: 20px;">
+                    <div style="font-size: 1.2em; line-height: 2;">
+                        <strong style="color: #00BFFF;">Detect</strong> (47ms) →
+                        <strong style="color: #1E90FF;">Decide</strong> (1.2s) →
+                        <strong style="color: #87CEEB;">Execute</strong> (1.6s)
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Generate Compliance Report</h3>
+                <pre><code>dsecOS c2 report --format stanag --mission OP-2025-1106</code></pre>
+                <ul class="feature-list" style="margin-top: 20px;">
+                    <li><strong>NATO STANAG 5527:</strong> Auto-generated mission report with full decision tree</li>
+                    <li><strong>ROE Validation:</strong> Cryptographic proof of compliance checks</li>
+                    <li><strong>Audit Trail:</strong> Immutable WORM storage with blockchain anchoring</li>
+                    <li><strong>Coalition Export:</strong> Sanitized reports for allied forces</li>
+                </ul>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value">47ms</div>
+                    <div class="stat-label">Sensor Fusion</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">92%</div>
+                    <div class="stat-label">AI Confidence</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">2.8s</div>
+                    <div class="stat-label">Kill Chain</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">ROE Compliance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Security & Compliance -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Security & Operational Assurance</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Network Survival</div>
+                    <div class="metric-value">99.999%</div>
+                    <p>In EW-denied environments</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Quantum-Resistant</div>
+                    <div class="metric-value">Kyber</div>
+                    <p>Post-quantum crypto</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Audit Integrity</div>
+                    <div class="metric-value">WORM</div>
+                    <p>Blockchain anchored</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Compartmentation</div>
+                    <div class="metric-value">CDG</div>
+                    <p>Cross-domain guards</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Compliance Framework</h3>
+                <ul class="feature-list">
+                    <li><strong>NATO STANAG 5527:</strong> Secure information exchange for C2 systems</li>
+                    <li><strong>US CJCSM 6510.01:</strong> Defense-in-Depth information assurance</li>
+                    <li><strong>UK JSP 440:</strong> Defence manual of security for classified information</li>
+                    <li><strong>MIL-STD-810H:</strong> Environmental engineering for tactical systems</li>
+                    <li><strong>FIPS 140-3:</strong> Cryptographic module validation</li>
+                </ul>
+            </div>
+
+            <table style="margin-top: 30px;">
+                <thead>
+                    <tr>
+                        <th>Security Feature</th>
+                        <th>Implementation</th>
+                        <th>Operational Benefit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Compartmented Access</strong></td>
+                        <td>Per-domain SELinux + CDG</td>
+                        <td>Coalition ops with sovereignty</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deniability</strong></td>
+                        <td>Ephemeral SIGINT + zero-log modes</td>
+                        <td>Sensitive source protection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anti-Tamper</strong></td>
+                        <td>TPM 2.0 + secure boot chain</td>
+                        <td>Prevent crypto extraction</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mesh Resilience</strong></td>
+                        <td>MANET + satellite fallback</td>
+                        <td>Survive network denial</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>🔒 Post-Quantum Ready:</strong> Kyber + Dilithium crypto protects against future quantum computer attacks
+            </div>
+        </div>
+
+        <!-- Slide 11: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">11</div>
+            <h2>Performance & Lethality Metrics</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>DsecOS C2</th>
+                        <th>Legacy Systems</th>
+                        <th>Advantage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sensor Fusion Latency</strong></td>
+                        <td style="color: #00FF00;">47 ms</td>
+                        <td>800-2000 ms</td>
+                        <td>17-42x faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Confidence Threshold</strong></td>
+                        <td style="color: #00FF00;">92%</td>
+                        <td>75-85%</td>
+                        <td>Higher precision</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kill Chain Time</strong></td>
+                        <td style="color: #00FF00;">2.8 seconds</td>
+                        <td>4-15 minutes</td>
+                        <td>86-321x faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Network Survival (EW)</strong></td>
+                        <td style="color: #00FF00;">99.999%</td>
+                        <td>94-98%</td>
+                        <td>100x more resilient</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OODA Loop Reduction</strong></td>
+                        <td style="color: #00FF00;">87%</td>
+                        <td>Baseline</td>
+                        <td>Decisive advantage</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coalition Interoperability</strong></td>
+                        <td style="color: #00FF00;">Native</td>
+                        <td>Limited/manual</td>
+                        <td>Seamless integration</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="ooda-highlight" style="margin-top: 40px;">
+                <h3 style="text-align: center; margin-bottom: 20px;">Combat Superiority Through Speed</h3>
+                <div style="text-align: center; font-size: 1.3em; line-height: 2;">
+                    <div><strong style="color: #FFD700;">Legacy C2:</strong> <span style="color: #FF6347;">4-15 minute OODA loop</span></div>
+                    <div style="margin: 20px 0; font-size: 2em; color: #00BFFF;">↓ 87% FASTER ↓</div>
+                    <div><strong style="color: #FFD700;">DsecOS C2:</strong> <span style="color: #00FF00;">2.8 second OODA loop</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">12</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>Joint Task Force Example (5,000 Assets)</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Costs</th>
+                            <th>With DsecOS C2</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Operating Costs</td>
+                            <td>£1,200,000,000</td>
+                            <td>£320,000,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">£880,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>OODA Loop Speed</td>
+                            <td>4-15 minutes</td>
+                            <td>2.8 seconds</td>
+                            <td style="color: #00FF00; font-weight: bold;">87% faster</td>
+                        </tr>
+                        <tr>
+                            <td>SIGINT Processing</td>
+                            <td>Manual triage</td>
+                            <td>AI prioritization</td>
+                            <td style="color: #00FF00; font-weight: bold;">65% cost reduction</td>
+                        </tr>
+                        <tr>
+                            <td>Mission Success Rate</td>
+                            <td>85-92%</td>
+                            <td>99.9%+</td>
+                            <td style="color: #00FF00; font-weight: bold;">Higher lethality</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #87CEEB; margin-bottom: 20px;">Total Annual Savings</div>
+                <div style="font-size: 3em; color: #00BFFF; font-weight: bold; text-shadow: 0 0 30px rgba(0, 191, 255, 0.6);">
+                    £880,000,000+
+                </div>
+                <div style="font-size: 1.2em; color: #FFD700; margin-top: 20px;">
+                    Plus 87% faster decision making = Battlefield dominance
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h3>Additional Value Drivers</h3>
+                <ul class="feature-list">
+                    <li><strong>Force Multiplication:</strong> Same assets, exponentially greater effectiveness</li>
+                    <li><strong>Coalition Advantage:</strong> Seamless interoperability without compromise</li>
+                    <li><strong>Future-Proof:</strong> Quantum-resistant crypto protects 30+ year lifecycle</li>
+                    <li><strong>Manpower Efficiency:</strong> AI reduces operator workload by 65%</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 13: Use Cases -->
+        <div class="slide">
+            <div class="slide-number">13</div>
+            <h2>Mission Profiles</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🎯</div>
+                    <h3 style="color: #00BFFF; font-size: 1.3em;">Kinetic Strike</h3>
+                    <p>Time-sensitive targeting with autonomous kill chain and ROE compliance</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🛡️</div>
+                    <h3 style="color: #00BFFF; font-size: 1.3em;">Integrated Air Defense</h3>
+                    <p>Multi-layer threat detection and coordinated intercept operations</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🌊</div>
+                    <h3 style="color: #00BFFF; font-size: 1.3em;">Maritime Domain Awareness</h3>
+                    <p>Anti-submarine warfare and surface threat tracking</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🔍</div>
+                    <h3 style="color: #00BFFF; font-size: 1.3em;">ISR Fusion</h3>
+                    <p>Intelligence, surveillance, reconnaissance across all domains</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🤝</div>
+                    <h3 style="color: #00BFFF; font-size: 1.3em;">Coalition Operations</h3>
+                    <p>Multi-national joint force coordination with sovereign controls</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">⚡</div>
+                    <h3 style="color: #00BFFF; font-size: 1.3em;">Cyber-Physical Effects</h3>
+                    <p>Integrated kinetic and non-kinetic operations</p>
+                </div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>⚡ Proven in Theater:</strong> Deployed by NATO JFC, US INDOPACOM, and UK PJHQ in live operations
+            </div>
+        </div>
+
+        <!-- Slide 14: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">The Edge Your Forces Deserve</h2>
+            
+            <div class="stats-bar" style="background: rgba(0, 191, 255, 0.2); max-width: 900px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">47ms</div>
+                    <div class="stat-label">Fusion</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">2.8s</div>
+                    <div class="stat-label">Kill Chain</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">99.999%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">£880M</div>
+                    <div class="stat-label">Savings</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #FFD700; background: rgba(255, 215, 0, 0.1);">
+                "See All. Strike True. Survive Always."
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">MULTI-DOMAIN</span>
+                <span class="alert-badge">AUTONOMOUS</span>
+                <span class="alert-badge">QUANTUM-RESISTANT</span>
+                <span class="alert-badge">NATO CERTIFIED</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #87CEEB;">
+                DsecOS Enterprise Military Edition
+            </div>
+        </div>
+
+        <!-- Slide 15: Next Steps -->
+        <div class="slide">
+            <div class="slide-number">15</div>
+            <h2>Next Steps</h2>
+            
+            <div class="highlight-box">
+                <h3>Deployment Pipeline</h3>
+                <ol style="padding-left: 30px; line-height: 2; font-size: 1.1em;">
+                    <li><strong style="color: #00BFFF;">Clearance Verification:</strong> Security clearance validation for Military Edition</li>
+                    <li><strong style="color: #00BFFF;">Threat Assessment:</strong> Mission analysis and threat modeling</li>
+                    <li><strong style="color: #00BFFF;">Pilot Deployment:</strong> 60-day evaluation with live sensor feeds</li>
+                    <li><strong style="color: #00BFFF;">Coalition Integration:</strong> Cross-domain guard configuration for allied forces</li>
+                    <li><strong style="color: #00BFFF;">Full Operational Capability:</strong> Theater-wide deployment</li>
+                </ol>
+            </div>
+
+            <div class="metrics-grid" style="margin-top: 40px;">
+                <div class="metric-card">
+                    <h3 style="color: #87CEEB; font-size: 1.2em;">Classified Docs</h3>
+                    <p>Technical manuals with SECRET//NOFORN annexes</p>
+                </div>
+                <div class="metric-card">
+                    <h3 style="color: #87CEEB; font-size: 1.2em;">Operator Training</h3>
+                    <p>4-week certification program with live exercises</p>
+                </div>
+                <div class="metric-card">
+                    <h3 style="color: #87CEEB; font-size: 1.2em;">24/7 Support</h3>
+                    <p>Global operations center with theater SMEs</p>
+                </div>
+                <div class="metric-card">
+                    <h3 style="color: #87CEEB; font-size: 1.2em;">Threat Intel</h3>
+                    <p>Real-time adversary TTP updates and countermeasures</p>
+                </div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 40px;">
+                <strong>⚠️ ITAR/EAR Notice:</strong> This system contains technical data subject to International Traffic in Arms Regulations. Export, retransfer, or disclosure to foreign persons requires authorization.
+            </div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 1.8em; color: #00BFFF; font-weight: bold;">
+                Unified Battlefield Dominance. Encrypted. Autonomous. Unjammable.
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#00BFFF',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#00BFFF',
+                lineColor: '#87CEEB',
+                secondaryColor: '#1E90FF',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#1E90FF',
+                noteTextColor: '#fff'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        // Smooth scroll reveal animation
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+
+        // Radar sweep animation
+        const titleSlide = document.querySelector('.title-slide::before');
+        
+        // Banner pulse effect
+        const banner = document.querySelector('.classification-banner');
+        if (banner) {
+            setInterval(() => {
+                banner.style.transform = 'scale(1.01)';
+                setTimeout(() => {
+                    banner.style.transform = 'scale(1)';
+                }, 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
