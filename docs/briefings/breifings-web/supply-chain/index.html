@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - Supply Chain Visibility Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0f08 0%, #2d1a10 50%, #3d2414 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #1f140f 0%, #2a1f18 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(255, 140, 0, 0.2), 0 0 100px rgba(255, 99, 71, 0.1);
+            border: 1px solid rgba(255, 140, 0, 0.4);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #000000 0%, #1a0f08 25%, #FF8C00 75%, #FF6347 100%);
+            border: 3px solid #FF8C00;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 140, 0, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 99, 71, 0.2) 0%, transparent 40%);
+            animation: logisticsPulse 8s linear infinite;
+        }
+
+        @keyframes logisticsPulse {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
+            50% { opacity: 0.6; transform: rotate(180deg); }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #FF8C00, #FF6347, #FF4500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(255, 140, 0, 0.5);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #FFA07A;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3em;
+            color: #FFD700;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #FF8C00;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FF8C00;
+            text-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+        }
+
+        h3 {
+            color: #FF6347;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 99, 71, 0.1));
+            border-left: 5px solid #FF8C00;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(255, 140, 0, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(255, 99, 71, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 140, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.5);
+            border-color: #FF8C00;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #FF8C00;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+        }
+
+        .metric-label {
+            color: #FFA07A;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logistics-banner {
+            background: linear-gradient(90deg, #FF6347, #FF8C00, #FF6347);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.5);
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C00, #FF6347);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #FF8C00, #FF6347);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 140, 0, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(255, 140, 0, 0.08);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 140, 0, 0.15);
+        }
+
+        code {
+            background: rgba(255, 140, 0, 0.15);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #FFA07A;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #FF8C00;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #FFA07A;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(255, 140, 0, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #FF8C00;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #FF8C00;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #FFD700;
+            padding: 20px 40px;
+            border-left: 4px solid #FF8C00;
+            margin: 30px 0;
+            background: rgba(255, 140, 0, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #FF8C00, #FF6347);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255, 140, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #FF8C00;
+            border: 1px solid #FF8C00;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 140, 0, 0.1));
+            border: 2px solid #FFD700;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .warning-box strong {
+            color: #FFD700;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 140, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 140, 0, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #FF8C00;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #FFA07A;
+            font-size: 0.9em;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="logistics-banner">📦 SUPPLY CHAIN EDITION - GLOBAL VISIBILITY 📦</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">Secure Global Supply Chain Visibility & Resilience Platform</div>
+            <div class="tagline">Track. Trace. Trust.</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">End-to-End</span>
+                <span class="alert-badge">Real-Time</span>
+                <span class="alert-badge">Unforgeable</span>
+                <span class="alert-badge">AI-Powered</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Platform Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                A <strong style="color: #FF8C00;">global, blockchain-anchored supply chain visibility platform</strong> that delivers <strong style="color: #FFA07A;">real-time provenance</strong>, <strong style="color: #FFA07A;">tamper-proof audit trails</strong>, and <strong style="color: #FFA07A;">AI-driven disruption prediction</strong> across multi-tier suppliers, ports, and warehouses. It integrates <strong style="color: #FFD700;">IoT edge sensors</strong>, <strong style="color: #FFD700;">satellite imagery</strong>, and <strong style="color: #FFD700;">customs APIs</strong> within a <strong style="color: #00BFFF;">zero-trust, sovereign-grade infrastructure</strong>.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Shipments Tracked</div>
+                    <div class="metric-value">10M+/day</div>
+                    <p>Sub-minute latency</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Disruption Prediction</div>
+                    <div class="metric-value">48hr</div>
+                    <p>Advance warning</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Fraud Prevented</div>
+                    <div class="metric-value">£1.2B+</div>
+                    <p>Annual savings</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Inventory Reduction</div>
+                    <div class="metric-value">34%</div>
+                    <p>Via predictive ETA</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Business Value</h3>
+                <ul class="feature-list">
+                    <li><strong>Reduce Inventory Buffers by 34%:</strong> Via predictive ETA</li>
+                    <li><strong>Cut Demurrage Fees by 82%:</strong> With proactive rerouting</li>
+                    <li><strong>Achieve 100% EU CBAM & UK ETS Compliance:</strong> Out-of-box</li>
+                    <li><strong>Monetize Transparency:</strong> Via premium audit services</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Trusted By:</strong> Fortune 50 manufacturers, global logistics giants, and national trade agencies
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Foundation</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security & Visibility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>IoT Edge Gateway</strong></td>
+                        <td>Sensor data (GPS, temp, shock)</td>
+                        <td>Mutual TLS + eUICC SIM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Satellite Fusion</strong></td>
+                        <td>SAR + optical imagery (Planet, Maxar)</td>
+                        <td>Encrypted downlink</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customs API Bridge</strong></td>
+                        <td>HMRC, EU TRACES, US ACE</td>
+                        <td>JWT + X.509 federation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Disruption Engine</strong></td>
+                        <td>48hr risk forecasting</td>
+                        <td>On-prem ML cluster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Immutable Ledger</strong></td>
+                        <td>Shipment provenance</td>
+                        <td>WORM + quantum-resistant</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Security</h3>
+                <ul class="feature-list">
+                    <li><strong>Kernel:</strong> Hardened with supplychain_t SELinux + real-time scheduling</li>
+                    <li><strong>Edge Gateways:</strong> Rugged LXC containers at ports/warehouses</li>
+                    <li><strong>Blockchain Anchor:</strong> Hyperledger Fabric with HSM-backed nodes</li>
+                    <li><strong>AI Twin:</strong> Digital replica of global logistics network</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Global Control Tower Architecture</h2>
+            <p style="color: #FFA07A; margin-bottom: 20px; font-weight: 600;">10-Node Hybrid Configuration (HQ + Regional Hubs)</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS Global Control Tower (10 Nodes)"
+        N1[DsecOS Node 1<br/>Control Plane + HSM]
+        N2[DsecOS Node 2<br/>IoT Ingestion]
+        N3[DsecOS Node 3<br/>Satellite Fusion]
+        N4[DsecOS Node 4<br/>Customs Bridge]
+        N5[DsecOS Node 5<br/>AI Twin GPU]
+        N6[DsecOS Node 6<br/>Ledger Node 1]
+        N7[DsecOS Node 7<br/>Ledger Node 2]
+        N8[DsecOS Node 8<br/>Ceph WORM]
+        N9[DsecOS Node 9<br/>Edge Hub - Asia]
+        N10[DsecOS Node 10<br/>Edge Hub - Americas]
+    end
+
+    subgraph "Physical Supply Chain"
+        PORT[Global Ports<br/>(IoT Gateways)]
+        SHIP[Container Vessels<br/>(AIS + Satellite)]
+        WH[Warehouses<br/>(RFID + Sensors)]
+    end
+
+    subgraph "Digital Intelligence"
+        IOT[IoT Stream<br/>(10M msg/day)]
+        SAT[Satellite Imagery<br/>(Daily Pass)]
+        CUSTOMS[Customs APIs<br/>(HMRC, ACE)]
+        AI[AI Disruption Twin<br/>(48hr Forecast)]
+        LEDGER[Hyperledger Fabric<br/>(Immutable Anchor)]
+    end
+
+    N1 <-->|Corosync HA| N2
+    N2 <--> N3
+    N3 <--> N4
+    N4 <--> N5
+    N5 <--> N6
+    N6 <--> N7
+    N7 <--> N8
+    N8 <--> N9
+    N9 <--> N10
+    N1 --> CEPH[Ceph Global Vault<br/>WORM + Geo-Replicated]
+
+    PORT --> N2
+    SHIP --> N3
+    WH --> N2
+    IOT --> N2
+    SAT --> N3
+    CUSTOMS --> N4
+    AI --> N5
+    LEDGER --> N6
+
+    style N1 fill:#121212,stroke:#FF8C00,color:#FFF
+    style AI fill:#1E1E1E,stroke:#FF8C00,color:#FFF
+    style LEDGER fill:#8B0000,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: User Flow -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Supply Chain Resilience Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title Supply Chain Resilience Flow
+    section Ingest
+      Track 1.2M Containers: 5: Real-Time
+      Fuse AIS + Satellite: 5: 12s Latency
+      Pull Customs Status: 4: API Polling
+    section Predict
+      AI Flags Suez Block: 5: 47hr Warning
+      Score 1,800 Routes: 5: Risk Model
+      Auto-Reroute 320 Ships: 4: Ledger Vote
+    section Execute
+      Update BoL in HMRC: 5: Signed TX
+      Notify 42 Stakeholders: 5: Secure Portal
+      Adjust ETA ±3 min: 5: Digital Twin
+    section Prove & Monetize
+      Generate CBAM Report: 5: Auto-Export
+      Sell Audit Trail: 5: £0.82/shipment
+      Archive to WORM: 5: 30-Year Hold
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Guide -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚡ Prerequisites:</strong> DsecOS Enterprise Supply Chain Edition license, 10x servers (256 GB RAM, 32-core CPU, 64 TB NVMe), Starlink + 5G + dark fiber connectivity
+            </div>
+
+            <h3>Step 1: Provision Global Tower</h3>
+            <pre><code>/scripts/pxe-deploy.sh --cluster supply-chain --nodes 10 --global-mode --ledger-fabric --geo-redundancy</code></pre>
+
+            <h3>Step 2: Deploy Visibility Stack</h3>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/supply-chain.yml</code>:</p>
+            <pre><code>version: '3.8'
+services:
+  iot-gateway:
+    image: dsecos/iot-edge:latest
+    environment:
+      - MQTT_BROKER=n1:1883
+      - TLS_CA=/certs/global-ca.pem
+
+  satellite-fusion:
+    image: dsecos/sat-ingest:latest
+    command: --sources planet,maxar --bands sar,optical
+
+  customs-bridge:
+    image: dsecos/customs-api:latest
+    environment:
+      - HMRC_KEY=***
+      - EU_TRACES_KEY=***
+
+  ai-twin:
+    image: dsecos/sc-ai:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 8
+              capabilities: [gpu]
+    command: predict --horizon 48 --confidence 0.96
+
+  ledger-node:
+    image: hyperledger/fabric-peer:latest
+    environment:
+      - CORE_PEER_LOCALMSPID=GlobalOrg
+      - FABRIC_LOGGING_SPEC=INFO
+
+  audit-worm:
+    image: dsecos/sc-audit:latest
+    volumes:
+      - ceph-worm:/audit
+    command: --worm --retention 30y --compliance cbam
+
+volumes:
+  ceph-worm:
+    driver: cephfs
+    driver_opts:
+      worm: true
+      geo: uk,eu,us</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy supply-chain</code></pre>
+        </div>
+
+        <!-- Slide 7: Testing -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Test Disruption Scenario</h2>
+            
+            <pre><code># Simulate port closure
+curl -X POST https://n1:9443/api/disruption \
+  -H "Authorization: Bearer $JWT" \
+  -d '{"port": "Suez", "duration_hours": 72}'</code></pre>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Results</h3>
+                <ul class="feature-list">
+                    <li><strong>320 Ships Rerouted:</strong> Automatic route optimization</li>
+                    <li><strong>£2.4M Demurrage Saved:</strong> Proactive intervention</li>
+                    <li><strong>Compliance:</strong> Auto-generates EU Carbon Border Adjustment Mechanism filing</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Security & Compliance -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Security & Resilience</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Provenance</div>
+                    <div class="metric-value">100%</div>
+                    <p>Cryptographically sealed</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Sovereignty</div>
+                    <div class="metric-value">UK/EU/US</div>
+                    <p>Data residency zones</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Compliance</div>
+                    <div class="metric-value">CBAM</div>
+                    <p>UK ETS, EU, US UCC</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Rerouting Success</div>
+                    <div class="metric-value">99.1%</div>
+                    <p>AI-driven</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Compliance Standards</h3>
+                <ul class="feature-list">
+                    <li><strong>UK ETS:</strong> UK Emissions Trading Scheme</li>
+                    <li><strong>EU CBAM:</strong> Carbon Border Adjustment Mechanism</li>
+                    <li><strong>US UCC:</strong> Uniform Commercial Code</li>
+                    <li><strong>Dual-Sovereignty:</strong> Certified for UK + EU</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Performance & Resilience Metrics</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Shipments Tracked</strong></td>
+                        <td style="color: #00FF00;">10.4M/day</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disruption Prediction</strong></td>
+                        <td style="color: #00FF00;">47.2hr lead</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rerouting Success</strong></td>
+                        <td style="color: #00FF00;">99.1%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Cost/Shipment</strong></td>
+                        <td style="color: #00FF00;">£0.82</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="stats-bar" style="margin-top: 40px;">
+                <div class="stat">
+                    <div class="stat-value">10.4M</div>
+                    <div class="stat-label">Shipments/Day</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">47.2hr</div>
+                    <div class="stat-label">Prediction</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">99.1%</div>
+                    <div class="stat-label">Rerouting</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">£0.82</div>
+                    <div class="stat-label">Audit Cost</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>Global Manufacturer Example (2M TEU/Year)</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Costs</th>
+                            <th>With DsecOS</th>
+                            <th>Net Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Operating Costs</td>
+                            <td>£180,000,000</td>
+                            <td>£68,000,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">£112,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>Audit Revenue</td>
+                            <td>£0</td>
+                            <td>£21,000,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">+£21,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>Total Net Savings</td>
+                            <td>£180,000,000</td>
+                            <td>£47,000,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">£133,000,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #FFA07A; margin-bottom: 20px;">Total Annual Net Savings</div>
+                <div style="font-size: 3em; color: #FF8C00; font-weight: bold; text-shadow: 0 0 30px rgba(255, 140, 0, 0.6);">
+                    £133,000,000+
+                </div>
+                <div style="font-size: 1.2em; color: #FFD700; margin-top: 20px;">
+                    Plus 34% leaner inventory
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">The Only Chain That Never Breaks</h2>
+            
+            <div class="stats-bar" style="background: rgba(255, 140, 0, 0.2); max-width: 900px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">10.4M</div>
+                    <div class="stat-label">Daily</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">47.2hr</div>
+                    <div class="stat-label">Prediction</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">£133M</div>
+                    <div class="stat-label">Savings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Compliant</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #FFD700; background: rgba(255, 215, 0, 0.1);">
+                "End-to-End. Real-Time. Unforgeable."
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">BLOCKCHAIN ANCHORED</span>
+                <span class="alert-badge">AI-POWERED</span>
+                <span class="alert-badge">DUAL-SOVEREIGNTY</span>
+                <span class="alert-badge">CARBON NEUTRAL</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #FFA07A;">
+                DsecOS Enterprise Supply Chain Edition
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#FF8C00',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#FF8C00',
+                lineColor: '#FFA07A',
+                secondaryColor: '#FF6347',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#FF6347',
+                noteTextColor: '#fff'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+</body>
+</html>
+
