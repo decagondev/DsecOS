@@ -230,14 +230,3 @@ For a mid-sized pharma (12 targets/year):
 - **With DsecOS**: $1.2M/year.
 - **Savings**: $7.2M/year + 6 months faster to clinic.
 
----
-
-**Accelerate Your Pipeline. Secure Your Future.**  
-Start your **drug discovery POC** → [pharma.dsecos.io](https://pharma.dsecos.io)  
-`enterprise@dsecos.io` | +44 20 8123 4567
-
----
-
-*DsecOS Enterprise – Where AI Meets the Future of Medicine.*  
-
-**Ready for the next example?** Just say **"next"**.
