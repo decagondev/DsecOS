@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - Quantum Computing Simulation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #3d2a5e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #1f0f3f 0%, #2a1f4f 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(147, 112, 219, 0.2), 0 0 100px rgba(186, 85, 211, 0.1);
+            border: 1px solid rgba(147, 112, 219, 0.4);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #000000 0%, #1a0a2e 25%, #9370db 75%, #ba55d3 100%);
+            border: 3px solid #9370db;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(147, 112, 219, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(186, 85, 211, 0.2) 0%, transparent 40%);
+            animation: quantumPulse 8s linear infinite;
+        }
+
+        @keyframes quantumPulse {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
+            50% { opacity: 0.6; transform: rotate(180deg); }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #9370db, #ba55d3, #da70d6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(147, 112, 219, 0.5);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #dda0dd;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3em;
+            color: #FFD700;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #9370db;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #9370db;
+            text-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
+        }
+
+        h3 {
+            color: #ba55d3;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(147, 112, 219, 0.1), rgba(186, 85, 211, 0.1));
+            border-left: 5px solid #9370db;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(147, 112, 219, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(147, 112, 219, 0.15), rgba(186, 85, 211, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(147, 112, 219, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(147, 112, 219, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(147, 112, 219, 0.5);
+            border-color: #9370db;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #9370db;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(147, 112, 219, 0.5);
+        }
+
+        .metric-label {
+            color: #dda0dd;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quantum-banner {
+            background: linear-gradient(90deg, #ba55d3, #9370db, #ba55d3);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(147, 112, 219, 0.5);
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #9370db, #ba55d3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(147, 112, 219, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #9370db, #ba55d3);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(147, 112, 219, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(147, 112, 219, 0.08);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+            box-shadow: 0 0 30px rgba(147, 112, 219, 0.15);
+        }
+
+        code {
+            background: rgba(147, 112, 219, 0.15);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #dda0dd;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #9370db;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(147, 112, 219, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #dda0dd;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(147, 112, 219, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #9370db;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #9370db;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #FFD700;
+            padding: 20px 40px;
+            border-left: 4px solid #9370db;
+            margin: 30px 0;
+            background: rgba(147, 112, 219, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #9370db, #ba55d3);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(147, 112, 219, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(147, 112, 219, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(147, 112, 219, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #9370db;
+            border: 1px solid #9370db;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(147, 112, 219, 0.1));
+            border: 2px solid #FFD700;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .warning-box strong {
+            color: #FFD700;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(147, 112, 219, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(147, 112, 219, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #9370db;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #dda0dd;
+            font-size: 0.9em;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="quantum-banner">⚛️ QUANTUM EDITION - SECURE SIMULATION ⚛️</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">Qiskit Simulation Environment for Quantum Computing Tests</div>
+            <div class="tagline">Harness Quantum Algorithms in a Classical, Isolated Environment</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">Secure R&D</span>
+                <span class="alert-badge">Cost-Effective</span>
+                <span class="alert-badge">Scalable</span>
+                <span class="alert-badge">Export Controlled</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Platform Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                A <strong style="color: #9370db;">secure platform for a Qiskit-based quantum simulation environment</strong>, enabling developers and researchers to test quantum circuits, algorithms (e.g., Shor's, Grover's), and error mitigation strategies without access to physical quantum hardware. Qiskit, IBM's open-source quantum SDK, runs in a <strong style="color: #dda0dd;">hardened containerized setup</strong>, simulating noisy quantum systems for deployment validation.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Cost Savings</div>
+                    <div class="metric-value">$10K/hr</div>
+                    <p>Vs. quantum cloud</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Qubit Simulation</div>
+                    <div class="metric-value">100+</div>
+                    <p>On classical hardware</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Deployment Time</div>
+                    <div class="metric-value">&lt;10 min</div>
+                    <p>Per node</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">IP Protection</div>
+                    <div class="metric-value">100%</div>
+                    <p>SELinux confined</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Business Value</h3>
+                <ul class="feature-list">
+                    <li><strong>Cost-Effective Testing:</strong> Simulate 100+ qubits on classical hardware vs. $10K/hour quantum cloud access</li>
+                    <li><strong>Secure Development:</strong> SELinux confines simulations to prevent IP leakage</li>
+                    <li><strong>Scalability:</strong> Parallelize simulations across Ceph-distributed storage</li>
+                    <li><strong>Integration Ready:</strong> Export results to real quantum providers (e.g., IBM Quantum) via API</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Ideal For:</strong> Quantum computing R&D teams in pharmaceuticals (drug discovery), finance (portfolio optimization), or logistics (routing optimization)
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Foundation</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Qiskit + Aer Simulator</strong></td>
+                        <td>Circuit design, noise modeling, up to 32-qubit simulations</td>
+                        <td>Rootless Python env, AppArmor, seccomp filters</td>
+                    </tr>
+                    <tr>
+                        <td><strong>JupyterLab Interface</strong></td>
+                        <td>Interactive notebook for algorithm testing</td>
+                        <td>JWT auth, rate-limited access, encrypted sessions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PostgreSQL Backend</strong></td>
+                        <td>Store circuit results, error rates</td>
+                        <td>LUKS-encrypted, row-level security for proprietary data</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Optimizer</strong></td>
+                        <td>Auto-tune error mitigation (e.g., dynamical decoupling)</td>
+                        <td>ML models trained on simulation logs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Security</h3>
+                <ul class="feature-list">
+                    <li><strong>Kernel Security:</strong> SELinux policies for qiskit_t domain, restricting simulator access</li>
+                    <li><strong>Resource Isolation:</strong> LXC containers with dedicated vCPUs/GPUs for parallel Aer simulations</li>
+                    <li><strong>Storage:</strong> Ceph for distributed quantum state vectors (up to 2^50 amplitudes)</li>
+                    <li><strong>Networking:</strong> Zero-trust SDN isolates simulation traffic from classical apps</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Cluster Architecture</h2>
+            <p style="color: #dda0dd; margin-bottom: 20px; font-weight: 600;">5-Node Cluster (On-Prem Lab or Hybrid with AWS)</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS Enterprise Cluster (5 Nodes)"
+        N1[DsecOS Node 1<br/>Master + Ceph MON]
+        N2[DsecOS Node 2<br/>Qiskit Simulator + GPU]
+        N3[DsecOS Node 3<br/>JupyterLab Gateway]
+        N4[DsecOS Node 4<br/>Worker + Ceph OSD]
+        N5[DsecOS Node 5<br/>AI Optimizer + Ceph OSD]
+    end
+
+    subgraph "Quantum Simulation Layer"
+        QIS[Qiskit Core<br/>(Circuit Builder)]
+        AER[Aer Simulator<br/>(Noisy Backend)]
+        JUP[JupyterLab<br/>(Interactive Notebooks)]
+    end
+
+    subgraph "Data & Security"
+        DB[PostgreSQL<br/>(Results + Logs)]
+        AI[AI Error Mitigator<br/>(Scikit + Qiskit)]
+        LIC[License Server<br/>Enterprise JWT]
+    end
+
+    N1 <-->|Corosync HA| N2
+    N2 <--> N3
+    N3 <--> N4
+    N4 <--> N5
+    N1 --> CEPH[Ceph Cluster<br/>Distributed State Storage]
+
+    QIS --> N2
+    AER --> N2
+    JUP --> N3
+    DB --> N4
+    AI --> N5
+    CEPH --> QIS
+    CEPH --> DB
+    CEPH --> AI
+
+    AI --> QIS
+    LIC --> N1
+
+    style N1 fill:#121212,stroke:#9370db,color:#FFF
+    style QIS fill:#1E1E1E,stroke:#9370db,color:#FFF
+    style AI fill:#8B0000,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: User Flow -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Simulation Deployment Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title Qiskit Simulation Deployment Flow
+    section Provisioning
+      Activate Enterprise License: 5: Quantum Researcher
+      PXE Deploy 5 Nodes: 5: DevOps
+      Configure GPU Passthrough: 4: Auto-Via Ansible
+    section Development
+      Launch JupyterLab: 5: React UI
+      Design Grover's Circuit: 5: Notebook
+      Run 28-Qubit Simulation: 4: Aer Backend
+    section Testing
+      Apply Noise Model: 5: One-Click
+      Analyze Error Rates: 4: AI Insights
+      Export to IBM Quantum: 3: API Call
+    section Optimization
+      Auto-Mitigate Errors: 3: ML-Driven
+      Scale to 5 Nodes: 4: Load Balancer
+      Generate Compliance Log: 5: Audit Export
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Guide -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚡ Prerequisites:</strong> DsecOS Enterprise license (quantum edition add-on), 5x servers (64 GB RAM, NVIDIA A100 GPUs, 2 TB SSD), high-bandwidth LAN
+            </div>
+
+            <h3>Step 1: Provision Nodes</h3>
+            <pre><code># On provisioning server
+/scripts/pxe-deploy.sh --cluster quantum-sim --nodes 5 --gpu-passthrough</code></pre>
+
+            <h3>Step 2: Activate License</h3>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">In Web UI: <strong>Settings > License</strong> → Enter key. Enable quantum features (GPU isolation, large memory pools).</p>
+
+            <h3>Step 3: Deploy Custom Stack</h3>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/qiskit-sim.yml</code>:</p>
+            <pre><code>version: '3.8'
+services:
+  qiskit:
+    image: mcr.microsoft.com/quantum/qiskit:latest
+    working_dir: /workspace
+    volumes:
+      - ceph-quantum:/workspace
+      - /dev/nvidia0:/dev/nvidia0
+    environment:
+      - QISKIT_SIMULATOR=AerSimulator
+      - CUDA_VISIBLE_DEVICES=0
+    command: jupyter lab --ip=0.0.0.0 --allow-root --no-browser
+    ports:
+      - "8888:8888"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: qiskit_results
+      POSTGRES_PASSWORD: quantum_secure
+    volumes:
+      - ceph-db:/var/lib/postgresql/data
+
+  ai-optimizer:
+    image: python:3.12-slim
+    volumes:
+      - ceph-ai:/models
+    command: python /app/optimize_errors.py
+    depends_on:
+      - qiskit
+
+volumes:
+  ceph-quantum:
+    driver: cephfs
+  ceph-db:
+    driver: cephfs
+  ceph-ai:
+    driver: cephfs</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy qiskit-sim</code></pre>
+        </div>
+
+        <!-- Slide 7: Sample Simulation -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Run a Sample Simulation</h2>
+            
+            <p style="font-size: 1.1em; margin-bottom: 20px;">In JupyterLab (<code>http://your-ip:8888</code>):</p>
+
+            <pre><code>from qiskit import QuantumCircuit, Aer, execute
+from qiskit.visualization import plot_histogram
+
+# Grover's search on 3 qubits
+qc = QuantumCircuit(3, 3)
+qc.h([0, 1, 2])  # Superposition
+qc.cz(0, 1)      # Oracle
+qc.measure([0,1,2], [0,1,2])
+
+simulator = Aer.get_backend('aer_simulator')
+result = execute(qc, simulator, shots=1024).result()
+counts = result.get_counts(qc)
+plot_histogram(counts)</code></pre>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Results</h3>
+                <ul class="feature-list">
+                    <li><strong>Results Stored:</strong> In PostgreSQL with full audit trail</li>
+                    <li><strong>AI Analysis:</strong> Analyzes for fidelity >95%</li>
+                    <li><strong>Export Ready:</strong> Integration with IBM Quantum via secure API</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Security & Compliance -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Security & Compliance</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Algorithm Protection</div>
+                    <div class="metric-value">SELinux</div>
+                    <p>Prevents exfiltration</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Error Analysis</div>
+                    <div class="metric-value">97%</div>
+                    <p>AI detection accuracy</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Compliance</div>
+                    <div class="metric-value">NIST</div>
+                    <p>Quantum-safe crypto</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Export Control</div>
+                    <div class="metric-value">100%</div>
+                    <p>Sensitive algorithms</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Security Features</h3>
+                <ul class="feature-list">
+                    <li><strong>Algorithm Protection:</strong> SELinux prevents exfiltration of quantum circuits</li>
+                    <li><strong>Error Analysis:</strong> AI detects simulation biases with 97% accuracy</li>
+                    <li><strong>Compliance:</strong> Logs for NIST quantum-safe crypto audits</li>
+                    <li><strong>Export Controls:</strong> Compliance with regulations on sensitive algorithms</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Performance Metrics</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Qubit Simulation (28-qubit)</strong></td>
+                        <td style="color: #00FF00;">45 seconds (GPU)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory Usage (50-qubit)</strong></td>
+                        <td style="color: #00FF00;">128 GB (distributed Ceph)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error Mitigation Speed</strong></td>
+                        <td style="color: #00FF00;">&lt;10 seconds per circuit</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fidelity Improvement</strong></td>
+                        <td style="color: #00FF00;">+15% via dynamical decoupling</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="stats-bar" style="margin-top: 40px;">
+                <div class="stat">
+                    <div class="stat-value">45s</div>
+                    <div class="stat-label">28-Qubit</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">128GB</div>
+                    <div class="stat-label">50-Qubit</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">+15%</div>
+                    <div class="stat-label">Fidelity</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">&lt;10s</div>
+                    <div class="stat-label">Mitigation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>Quantum R&D Lab Example (500 Simulations/Month)</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Costs</th>
+                            <th>With DsecOS</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Operating Costs</td>
+                            <td>$200,000</td>
+                            <td>$50,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">$150,000</td>
+                        </tr>
+                        <tr>
+                            <td>Iteration Speed</td>
+                            <td>Baseline</td>
+                            <td>5x faster</td>
+                            <td style="color: #00FF00; font-weight: bold;">Accelerated</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #dda0dd; margin-bottom: 20px;">Total Annual Savings</div>
+                <div style="font-size: 3em; color: #9370db; font-weight: bold; text-shadow: 0 0 30px rgba(147, 112, 219, 0.6);">
+                    $150,000+
+                </div>
+                <div style="font-size: 1.2em; color: #FFD700; margin-top: 20px;">
+                    Plus 5x faster iteration
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">Simulating the Quantum Future, Secured in the Classical World</h2>
+            
+            <div class="stats-bar" style="background: rgba(147, 112, 219, 0.2); max-width: 900px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">Qubits</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">$150K</div>
+                    <div class="stat-label">Savings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">5x</div>
+                    <div class="stat-label">Faster</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Secure</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #FFD700; background: rgba(255, 215, 0, 0.1);">
+                "Harness Quantum Algorithms in a Classical, Isolated Environment"
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">SECURE</span>
+                <span class="alert-badge">SCALABLE</span>
+                <span class="alert-badge">COST-EFFECTIVE</span>
+                <span class="alert-badge">EXPORT CONTROLLED</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #dda0dd;">
+                DsecOS Enterprise Quantum Edition
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#9370db',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#9370db',
+                lineColor: '#dda0dd',
+                secondaryColor: '#ba55d3',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#ba55d3',
+                noteTextColor: '#fff'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+</body>
+</html>
+
