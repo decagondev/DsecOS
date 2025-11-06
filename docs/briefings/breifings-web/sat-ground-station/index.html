@@ -523,17 +523,17 @@ graph TD
     end
 
     subgraph "Space Segment"
-        LEO[LEO Constellation<br/>(1,200 Sats)]
-        MEO[MEO Relay Nodes<br/>(12 Sats)]
-        GROUND[Antenna Array<br/>(4.5m Ka-Band)]
+        LEO["LEO Constellation<br/>(1,200 Sats)"]
+        MEO["MEO Relay Nodes<br/>(12 Sats)"]
+        GROUND["Antenna Array<br/>(4.5m Ka-Band)"]
     end
 
     subgraph "Secure Data Pipeline"
-        SDR[SDR Front-End<br/>(USRP X410)]
-        CCSDS[CCSDS TM/TC<br/>(Frame Sync)]
-        AI[Orbit AI Predictor<br/>(72hr TLE)]
-        QKD[QKD Terminal<br/>(ID Quantique)]
-        RELAY[Space Data Relay<br/>(Store-Carry)]
+        SDR["SDR Front-End<br/>(USRP X410)"]
+        CCSDS["CCSDS TM/TC<br/>(Frame Sync)"]
+        AI["Orbit AI Predictor<br/>(72hr TLE)"]
+        QKD["QKD Terminal<br/>(ID Quantique)"]
+        RELAY["Space Data Relay<br/>(Store-Carry)"]
     end
 
     N1 <-->|Corosync HA<br/>Encrypted| N2

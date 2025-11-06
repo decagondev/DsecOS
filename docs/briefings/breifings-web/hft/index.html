@@ -540,15 +540,15 @@ graph TD
     end
 
     subgraph "HFT Pipeline"
-        FEED[Exchange Feeds<br/>(ITCH, MDP, SIP)]
-        MDH[Market Data Handler<br/>(DPDK + FPGA)]
-        EXEC[Order Execution<br/>(Binary Gateway)]
-        RISK[Pre-Trade Risk<br/>(1.8 µs)]
+        FEED["Exchange Feeds<br/>(ITCH, MDP, SIP)"]
+        MDH["Market Data Handler<br/>(DPDK + FPGA)"]
+        EXEC["Order Execution<br/>(Binary Gateway)"]
+        RISK["Pre-Trade Risk<br/>(1.8 µs)"]
     end
 
     subgraph "Compliance & Intelligence"
-        AI[AI Arb Detector<br/>(Latency Patterns)]
-        LOG[Tick Audit Logger<br/>(WORM + Crypto)]
+        AI["AI Arb Detector<br/>(Latency Patterns)"]
+        LOG["Tick Audit Logger<br/>(WORM + Crypto)"]
         LIC[License Server<br/>HFT Edition]
     end
 

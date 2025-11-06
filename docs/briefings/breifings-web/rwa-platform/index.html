@@ -525,17 +525,17 @@ graph TD
     end
 
     subgraph "RWA Lifecycle"
-        ASSET[Physical Asset<br/>(Mayfair Flat, Picasso)]
-        LEGAL[Legal SPV<br/>(Cayman Trust)]
-        TOKEN[T-REX Token<br/>(1:1 Backed)]
-        KYC[KYC Soulbound NFT<br/>(Investor ID)]
+        ASSET["Physical Asset<br/>(Mayfair Flat, Picasso)"]
+        LEGAL["Legal SPV<br/>(Cayman Trust)"]
+        TOKEN["T-REX Token<br/>(1:1 Backed)"]
+        KYC["KYC Soulbound NFT<br/>(Investor ID)"]
     end
 
     subgraph "Compliance & Trading"
-        ORACLE[Chainlink Legal Feed<br/>(Title Deed Hash)]
-        ESCROW[Dividend Escrow<br/>(Auto-Payout)]
-        DEX[Uniswap V4<br/>(Fractional Market)]
-        AUDIT[Immutable Auditor<br/>(WORM + ZK)]
+        ORACLE["Chainlink Legal Feed<br/>(Title Deed Hash)"]
+        ESCROW["Dividend Escrow<br/>(Auto-Payout)"]
+        DEX["Uniswap V4<br/>(Fractional Market)"]
+        AUDIT["Immutable Auditor<br/>(WORM + ZK)"]
     end
 
     N1 <-->|Corosync HA| N2

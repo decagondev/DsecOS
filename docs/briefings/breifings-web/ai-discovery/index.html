@@ -508,52 +508,52 @@
             <p style="color: #7FFFD4; margin-bottom: 20px; font-weight: 600;">8-Node GPU Cluster (On-Prem or Hybrid)</p>
             <div class="diagram-container">
                 <div class="mermaid">
-graph TD
-    subgraph "DsecOS Enterprise Cluster (8 Nodes)"
-        N1[DsecOS Node 1<br/>Master + Ceph MON]
-        N2[DsecOS Node 2<br/>AlphaFold GPU]
-        N3[DsecOS Node 3<br/>Docking Worker GPU]
-        N4[DsecOS Node 4<br/>AI Generator GPU]
-        N5[DsecOS Node 5<br/>Ceph OSD + NVMe]
-        N6[DsecOS Node 6<br/>Ceph OSD + NVMe]
-        N7[DsecOS Node 7<br/>Ceph OSD + NVMe]
-        N8[DsecOS Node 8<br/>Jupyter + Results]
-    end
-
-    subgraph "AI Drug Discovery Pipeline"
-        AF[AlphaFold 3<br/>(Structure Prediction)]
-        DOCK[AutoDock Vina<br/>(Docking Engine)]
-        GEN[ChemBERTa<br/>(Molecule Generator)]
-        JUP[JupyterLab<br/>(Orchestration)]
-    end
-
-    subgraph "Data & Compliance"
-        DB[PostgreSQL + PGVector<br/>(Compounds + Embeddings)]
-        AI[AI Scorer<br/>(Binding Prediction)]
-        LIC[License Server]
-    end
-
-    N1 <-->|Corosync HA| N2
-    N2 <--> N3
-    N3 <--> N4
-    N1 --> CEPH[Ceph Cluster<br/>Encrypted NVMe Pool]
-
-    AF --> N2
-    DOCK --> N3
-    GEN --> N4
-    JUP --> N8
-    DB --> N5
-    AI --> N6
-    CEPH --> AF
-    CEPH --> DB
-    CEPH --> GEN
-
-    AI --> DOCK
-    LIC --> N1
-
-    style N1 fill:#121212,stroke:#00D9A5,color:#FFF
-    style AF fill:#1E1E1E,stroke:#00D9A5,color:#FFF
-    style AI fill:#8B0000,color:#FFF
+                    graph TD
+                    subgraph "DsecOS Enterprise Cluster (8 Nodes)"
+                        N1[DsecOS Node 1<br/>Master + Ceph MON]
+                        N2[DsecOS Node 2<br/>AlphaFold GPU]
+                        N3[DsecOS Node 3<br/>Docking Worker GPU]
+                        N4[DsecOS Node 4<br/>AI Generator GPU]
+                        N5[DsecOS Node 5<br/>Ceph OSD + NVMe]
+                        N6[DsecOS Node 6<br/>Ceph OSD + NVMe]
+                        N7[DsecOS Node 7<br/>Ceph OSD + NVMe]
+                        N8[DsecOS Node 8<br/>Jupyter + Results]
+                    end
+                
+                    subgraph "AI Drug Discovery Pipeline"
+                        AF["AlphaFold 3<br/>(Structure Prediction)"]
+                        DOCK["AutoDock Vina<br/>(Docking Engine)"]
+                        GEN["ChemBERTa<br/>(Molecule Generator)"]
+                        JUP["JupyterLab<br/>(Orchestration)"]
+                    end
+                
+                    subgraph "Data & Compliance"
+                        DB["PostgreSQL + PGVector<br/>(Compounds + Embeddings)"]
+                        AI["AI Scorer<br/>(Binding Prediction)"]
+                        LIC[License Server]
+                    end
+                
+                    N1 <-->|Corosync HA| N2
+                    N2 <--> N3
+                    N3 <--> N4
+                    N1 --> CEPH[Ceph Cluster<br/>Encrypted NVMe Pool]
+                
+                    AF --> N2
+                    DOCK --> N3
+                    GEN --> N4
+                    JUP --> N8
+                    DB --> N5
+                    AI --> N6
+                    CEPH --> AF
+                    CEPH --> DB
+                    CEPH --> GEN
+                
+                    AI --> DOCK
+                    LIC --> N1
+                
+                    style N1 fill:#121212,stroke:#00D9A5,color:#FFF
+                    style AF fill:#1E1E1E,stroke:#00D9A5,color:#FFF
+                    style AI fill:#8B0000,color:#FFF
                 </div>
             </div>
         </div>
@@ -571,11 +571,11 @@ journey
       PXE Deploy 8 GPU Nodes: 5: BioIT
       Enable GPU Passthrough: 4: Auto-Ansible
     section Pipeline Launch
-      Upload Target Protein (PDB): 5: JupyterLab
+      Upload Target Protein PDB: 5: JupyterLab
       Run AlphaFold Prediction: 5: One-Click
       Generate 1M Candidates: 4: ChemBERTa
     section Screening
-      Parallel Docking (100k/hr): 5: AutoDock
+      Parallel Docking 100k per hour: 5: AutoDock
       AI Rank Binding Affinity: 4: ML Scorer
       Select Top 100 Hits: 4: Visualization
     section Validation

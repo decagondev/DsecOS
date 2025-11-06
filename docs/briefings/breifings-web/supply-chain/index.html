@@ -528,17 +528,17 @@ graph TD
     end
 
     subgraph "Physical Supply Chain"
-        PORT[Global Ports<br/>(IoT Gateways)]
-        SHIP[Container Vessels<br/>(AIS + Satellite)]
-        WH[Warehouses<br/>(RFID + Sensors)]
+        PORT["Global Ports<br/>(IoT Gateways)"]
+        SHIP["Container Vessels<br/>(AIS + Satellite)"]
+        WH["Warehouses<br/>(RFID + Sensors)"]
     end
 
     subgraph "Digital Intelligence"
-        IOT[IoT Stream<br/>(10M msg/day)]
-        SAT[Satellite Imagery<br/>(Daily Pass)]
-        CUSTOMS[Customs APIs<br/>(HMRC, ACE)]
-        AI[AI Disruption Twin<br/>(48hr Forecast)]
-        LEDGER[Hyperledger Fabric<br/>(Immutable Anchor)]
+        IOT["IoT Stream<br/>(10M msg/day)"]
+        SAT["Satellite Imagery<br/>(Daily Pass)"]
+        CUSTOMS["Customs APIs<br/>(HMRC, ACE)"]
+        AI["AI Disruption Twin<br/>(48hr Forecast)"]
+        LEDGER["Hyperledger Fabric<br/>(Immutable Anchor)"]
     end
 
     N1 <-->|Corosync HA| N2
