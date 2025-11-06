@@ -235,7 +235,226 @@ flowchart TD
     style APP fill:#228B22,color:#FFF
 ```
 
+## 9. Kernel Boot & Module Load Sequence
+
+```mermaid
+flowchart TD
+    A[BIOS/UEFI] --> B[GRUB2 Bootloader]
+    B --> C["Load vmlinuz<br/>(Custom Kernel 6.x)"]
+    C --> D[Initramfs<br/>→ Load Modules]
+    D --> E[modprobe kvm]
+    E --> F[modprobe vhost-net]
+    F --> G[modprobe lxc]
+    G --> H[modprobe overlay]
+    H --> I[SELinux: Load Policy<br/>enforcing]
+    I --> J[Execute /etc/rc.local<br/>→ firewall-setup.sh]
+    J --> K[Start systemd<br/>→ docker, portainer, ossec]
+    K --> L[System Ready]
+
+    style C fill:#121212,stroke:#00BFFF,color:#FFF
+    style I fill:#8B0000,color:#FFF
+    style L fill:#228B22,color:#FFF
+```
+
 ---
+
+## 10. VM/Container Lifecycle Management
+
+```mermaid
+stateDiagram-v2
+    [*] --> Creating
+    Creating --> Starting: qm start / pct start
+    Starting --> Running
+    Running --> Stopping: qm stop / pct stop
+    Stopping --> Stopped
+    Stopped --> Starting
+    Running --> Migrating: Live Migration
+    Migrating --> Running
+    Stopped --> Destroying: qm destroy / pct destroy
+    Destroying --> [*]
+
+    state Running {
+        [*] --> Active
+        Active --> Suspended: qm suspend
+        Suspended --> Active: qm resume
+    }
+```
+
+---
+
+## 11. Zero-Trust Network Policy Enforcement
+
+```mermaid
+flowchart LR
+    A[Container/VM Start] --> B[Generate SDN Zone]
+    B --> C[Assign VLAN ID]
+    C --> D[Apply nftables Rules<br/>Default: DROP]
+    D --> E{Allowed Ports?}
+    E -->|Yes| F[Open Port via API]
+    F --> G[Update Firewall Chain]
+    E -->|No| H[Log Attempt → OSSEC]
+    H --> I[AI Anomaly Detector]
+    I --> J[Block + Alert]
+
+    style D fill:#121212,stroke:#00BFFF,color:#FFF
+    style J fill:#B22222,color:#FFF
+```
+
+---
+
+## 12. Backup & Snapshot Workflow
+
+```mermaid
+sequenceDiagram
+    participant U as Admin UI
+    participant API as FastAPI
+    participant P as Proxmox
+    participant S as Storage (ZFS/Ceph)
+
+    U->>API: POST /backup {vmid, schedule}
+    API->>P: Schedule Snapshot (zfs send / vzdump)
+    P->>S: Create Incremental Snapshot
+    S-->>P: Snapshot ID
+    P-->>API: 200 OK + ID
+    API-->>U: "Backup Scheduled"
+
+    Note over P,S: Nightly @ 02:00<br/>Retention: 7 days
+    alt Retention Exceeded
+        P->>S: Delete Old Snap
+    end
+```
+
+---
+
+## 13. Fail2Ban + OSSEC Integration
+
+```mermaid
+graph TD
+    A[SSH Login Attempt] --> B[auth.log]
+    B --> C[Fail2Ban<br/>Jail: sshd]
+    C -->|5 fails| D[iptables-nft BAN IP]
+    D --> E[Log to OSSEC]
+    E --> F[OSSEC Active Response<br/>→ Permanent Block]
+    F --> G[Alert → Grafana]
+
+    style C fill:#1E1E1E,stroke:#00BFFF,color:#FFF
+    style F fill:#8B0000,color:#FFF
+```
+
+---
+
+## 14. Template Rendering & Deployment Pipeline
+
+```mermaid
+flowchart TD
+    T[templates/stacks/*.yml] --> R["Jinja2 Render<br/>{% if env == 'prod' %}"]
+    R --> C[Customized docker-compose.yml]
+    C --> V[Validate Schema]
+    V --> D[Deploy via dsecos CLI]
+    D --> LXC[Spawn LXC]
+    LXC --> DOCK[docker-compose up]
+    DOCK --> APP[App Running]
+
+    style R fill:#2F4F4F,color:#FFF
+    style APP fill:#228B22,color:#FFF
+```
+
+---
+
+## 15. PXE + Kickstart Automated Install
+
+```mermaid
+sequenceDiagram
+    participant HW as Bare Metal
+    participant DHCP as DHCP Server
+    participant TFTP as TFTP Server
+    participant HTTP as HTTP (Kickstart)
+
+    HW->>DHCP: Discover
+    DHCP-->>HW: Offer (IP + PXE)
+    HW->>TFTP: Request pxelinux.0
+    TFTP-->>HW: Send kernel + initrd
+    HW->>HTTP: GET ks.cfg
+    HTTP-->>HW: Auto-install config
+    HW->>HW: Partition + Install DsecOS
+    HW->>HW: Reboot → Ready
+
+    Note over HW,HTTP: ks.cfg includes:<br/>LUKS, SELinux, Docker
+```
+
+---
+
+## 16. CI/CD Pipeline with Security Gates
+
+```mermaid
+gitGraph
+    commit id: "Code"
+    branch feature/new-stack
+    checkout feature/new-stack
+    commit id: "Add Ruby Template"
+    commit id: "Run Tests"
+    commit id: "Lynis Scan"
+    checkout main
+    merge feature/new-stack
+    commit tag: "v0.3.1"
+
+    branch release/v1.0
+    checkout release/v1.0
+    commit id: "Bump Version"
+    commit id: "Build ISO"
+    commit id: "Sign ISO"
+    checkout main
+    merge release/v1.0
+    commit tag: "v1.0.0-ga"
+```
+
+---
+
+## 17. Multi-Tenant Isolation Model
+
+```mermaid
+graph TD
+    subgraph Tenant_A
+        VA[VM A1] --> LA[LXC A1]
+        LA --> DA[Docker A1]
+    end
+    subgraph Tenant_B
+        VB[VM B1] --> LB[LXC B1]
+        LB --> DB[Docker B1]
+    end
+
+    VA --> NET_A[SDN Zone A]
+    VB --> NET_B[SDN Zone B]
+    NET_A -.->|No Route| NET_B
+
+    LA --> SEL_A[SELinux: tenant_a_t]
+    LB --> SEL_B[SELinux: tenant_b_t]
+
+    style NET_A fill:#00BFFF,color:#000
+    style NET_B fill:#DC143C,color:#FFF
+```
+
+---
+
+## 18. Disaster Recovery Flow
+
+```mermaid
+flowchart TD
+    A[Node Failure Detected] --> B[Pacemaker Fencing]
+    B --> C[Restart Services on Peer]
+    C --> D[Promote Replica OSD]
+    D --> E[Update DNS VIP]
+    E --> F[Notify Admin → Grafana]
+    F --> G[Auto-Recovery Complete]
+
+    style A fill:#B22222,color:#FFF
+    style G fill:#228B22,color:#FFF
+```
+
+---
+
+**DsecOS – Engineered for Security, Automation, and Resilience.**  
+*From boot to production in under 15 minutes.*
 
 ## Rendering Instructions
 
