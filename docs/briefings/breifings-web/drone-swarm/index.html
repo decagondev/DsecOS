@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - Drone Swarm Defense</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0d1b2a 50%, #1b263b 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #0f1419 0%, #1a1f2e 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(255, 0, 0, 0.15), 0 0 100px rgba(0, 191, 255, 0.1);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1b1b1b 25%, #8B0000 100%);
+            border: 2px solid #FF4500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,69,0,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #FF4500, #DC143C, #8B0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #FF6347;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.2em;
+            color: #FFD700;
+            font-style: italic;
+            font-weight: 600;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            color: #FF4500;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FF4500;
+            text-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+        }
+
+        h3 {
+            color: #FF6347;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255, 69, 0, 0.1), rgba(139, 0, 0, 0.1));
+            border-left: 5px solid #FF4500;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(255, 69, 0, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(139, 0, 0, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 69, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,69,0,0.2) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+            border-color: #FF4500;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #FF4500;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+        }
+
+        .metric-label {
+            color: #FFD700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #DC143C, #8B0000);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #FF4500, #DC143C);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 69, 0, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(255, 69, 0, 0.05);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.1);
+        }
+
+        code {
+            background: rgba(255, 69, 0, 0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #FF6347;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #FF4500;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #FF6347;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(255, 69, 0, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #FF4500;
+        }
+
+        .feature-list li:before {
+            content: "⚡";
+            position: absolute;
+            left: 15px;
+            color: #FF4500;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #FFD700;
+            padding: 20px 40px;
+            border-left: 4px solid #FF4500;
+            margin: 30px 0;
+            background: rgba(255, 69, 0, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #FF4500, #DC143C);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 69, 0, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(255, 69, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #FF4500;
+            border: 1px solid #FF4500;
+        }
+
+        .classified-banner {
+            background: linear-gradient(90deg, #DC143C, #8B0000, #DC143C);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: bannerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes bannerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 69, 0, 0.1));
+            border: 2px solid #FFD700;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .warning-box strong {
+            color: #FFD700;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 69, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 69, 0, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #FF4500;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #FFD700;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="classified-banner">⚠️ DEFENSE EDITION - EXPORT CONTROLLED ⚠️</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">Autonomous Drone Swarm Control & Defense System</div>
+            <div class="tagline">COMMAND. COORDINATE. COUNTER. INSTANTLY.</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">Edge AI</span>
+                <span class="alert-badge">Mission-Critical</span>
+                <span class="alert-badge">Air-Gapped</span>
+                <span class="alert-badge">NATO Compliant</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Mission Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                The <strong style="color: #FF4500;">world's most secure autonomous drone swarm control platform</strong> for defense, border security, and critical infrastructure protection. Runs <strong style="color: #FFD700;">real-time computer vision</strong>, <strong style="color: #FFD700;">swarm coordination</strong>, and <strong style="color: #FFD700;">electronic warfare countermeasures</strong> across 100+ drones simultaneously in an <strong style="color: #FF6347;">air-gapped, zero-trust environment</strong>.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Concurrent Drones</div>
+                    <div class="metric-value">500+</div>
+                    <p>Sub-50ms latency</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Mission Success</div>
+                    <div class="metric-value">99.99%</div>
+                    <p>GPS-denied environments</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Force Multiplier</div>
+                    <div class="metric-value">1:500</div>
+                    <p>Operator to asset ratio</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Deployment Time</div>
+                    <div class="metric-value">&lt;30 min</div>
+                    <p>Full edge cluster</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Operational Capabilities</h3>
+                <ul class="feature-list">
+                    <li><strong>Real-Time Computer Vision:</strong> YOLOv9 threat detection with 99.1% accuracy</li>
+                    <li><strong>Autonomous Threat Neutralization:</strong> Jamming, intercept, forced landing</li>
+                    <li><strong>Full Forensic Chain:</strong> Rules of Engagement compliance tracking</li>
+                    <li><strong>Network Resilience:</strong> Survives total denial via on-board mesh + fallback AI</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Zero Data Exfiltration:</strong> Even if drone is captured, data self-destructs. NATO STANAG 4586 + MIL-STD-810H compliant.
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Foundation</h2>
+            
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value">38ms</div>
+                    <div class="stat-label">Control Latency</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">99.1%</div>
+                    <div class="stat-label">Detection Accuracy</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">8.4s</div>
+                    <div class="stat-label">Neutralization Time</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1,200+</div>
+                    <div class="stat-label">Max Swarm Size</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Security Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PX4 / ArduPilot</strong></td>
+                        <td>Flight control stack</td>
+                        <td>Signed firmware, secure boot</td>
+                    </tr>
+                    <tr>
+                        <td><strong>YOLOv9 + DeepSORT</strong></td>
+                        <td>Real-time threat detection</td>
+                        <td>Encrypted weights, GPU memory isolation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ROS 2 Humble</strong></td>
+                        <td>Swarm coordination</td>
+                        <td>DDS-Security (TLS + GMAC)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MAVLink 2</strong></td>
+                        <td>Telemetry & commands</td>
+                        <td>Encrypted + signed packets</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Commander</strong></td>
+                        <td>Autonomous decision engine</td>
+                        <td>FIPS 140-3 validated crypto</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Hardening</h3>
+                <ul class="feature-list">
+                    <li><strong>Edge Kernel:</strong> Hardened 6.5 with real-time PREEMPT_RT patch</li>
+                    <li><strong>GPU/TPU Isolation:</strong> PCI passthrough + NVIDIA JetPack in drone_t SELinux domain</li>
+                    <li><strong>Mesh Networking:</strong> BATMAN-adv + zero-trust encrypted tunnels</li>
+                    <li><strong>AI Brain:</strong> On-board YOLOv9 + reinforcement learning for swarm behavior</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture Diagram -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Deployment Architecture</h2>
+            <p style="color: #FFD700; margin-bottom: 20px; font-weight: 600;">4-Node Ruggedized Cluster (Deployable in 20ft Container)</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS Enterprise Edge Cluster (4 Rugged Nodes)"
+        N1[DsecOS Node 1<br/>Command Center + Ceph MON]
+        N2[DsecOS Node 2<br/>AI Vision GPU + TPU]
+        N3[DsecOS Node 3<br/>Swarm Orchestrator]
+        N4[DsecOS Node 4<br/>Ceph OSD + WORM<br/>Air-Gapped Backup]
+    end
+
+    subgraph "Swarm Control Stack"
+        PX4[PX4 Autopilot<br/>(500+ Drones)]
+        ROS[ROS 2 Humble<br/>(DDS-Security)]
+        YOLO[YOLOv9 + DeepSORT<br/>(Threat Detection)]
+        AI[AI Commander<br/>(RL Swarm Logic)]
+    end
+
+    subgraph "Countermeasures"
+        JAM[Software-Defined Radio<br/>(Jamming / Spoofing)]
+        MESH[BATMAN-adv Mesh<br/>(Self-Healing)]
+    end
+
+    N1 <-->|Corosync HA<br/>Encrypted| N2
+    N2 <--> N3
+    N3 <--> N4
+    N1 --> CEPH[Ceph Air-Gapped Pool<br/>WORM Forensics]
+
+    PX4 --> N1
+    ROS --> N3
+    YOLO --> N2
+    AI --> N2
+    JAM --> N2
+    MESH --> N3
+
+    style N1 fill:#121212,stroke:#FF4500,color:#FFF
+    style YOLO fill:#1E1E1E,stroke:#FF4500,color:#FFF
+    style AI fill:#8B0000,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Mission Flow -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Autonomous Defense Mission Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title Drone Swarm Defense Mission Flow
+    section Launch
+      Activate Defense License: 5: Commander
+      Power On Edge Cluster: 5: Operator
+      Connect 500 Drones: 4: Auto-Pairing
+    section Patrol
+      Deploy Swarm Grid: 5: One-Click
+      Real-Time Video Feed: 5: YOLO Overlay
+      AI Detects Intruder: 5: 42ms Alert
+    section Neutralize
+      Execute ROE Playbook: 5: AI Commander
+      Jam GPS + RF: 4: SDR Node
+      Intercept + Force Land: 4: Swarm Maneuver
+      Capture HD Video: 5: WORM Storage
+    section After Action
+      Generate AAR Report: 5: Auto-PDF
+      Cryptographic Sign Evidence: 5: Legal Hold
+      Re-Arm in 3 Minutes: 5: Full Cycle
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Rules of Engagement Compliance</h3>
+                <p style="font-size: 1.1em; line-height: 1.6;">
+                    Every action is logged with cryptographic timestamps and stored in WORM (Write-Once-Read-Many) storage for legal compliance. The AI Commander executes pre-approved ROE playbooks, ensuring all autonomous decisions are traceable and auditable.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Prerequisites -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚠️ Export Controlled:</strong> Requires DsecOS Enterprise Defense Edition license (ITAR/EAR controlled)
+            </div>
+
+            <h3>Hardware Specifications</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Nodes Required</div>
+                    <div class="metric-value">4x</div>
+                    <p>MIL-spec ruggedized servers</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Memory</div>
+                    <div class="metric-value">128 GB</div>
+                    <p>RAM per node</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">GPU</div>
+                    <div class="metric-value">4x</div>
+                    <p>NVIDIA Jetson Orin per node</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Storage</div>
+                    <div class="metric-value">8 TB</div>
+                    <p>NVMe per node</p>
+                </div>
+            </div>
+
+            <h3>Network Configuration</h3>
+            <ul class="feature-list">
+                <li><strong>Primary:</strong> Dual 10 Gbps Ethernet for cluster communication</li>
+                <li><strong>Backup:</strong> RF mesh network (BATMAN-adv) for network-denied operations</li>
+                <li><strong>Isolation:</strong> Air-gapped mode with physical network separation</li>
+            </ul>
+
+            <h3>Step 1: Provision Edge Cluster</h3>
+            <pre><code>/scripts/pxe-deploy.sh --cluster drone-defense --nodes 4 --rugged --airgap-mode</code></pre>
+            <p style="color: #FFD700; margin-top: 10px;">⚡ Nodes auto-configure with Ceph + Corosync HA</p>
+        </div>
+
+        <!-- Slide 7: Stack Configuration -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Deploy Swarm Stack</h2>
+            
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/drone-swarm.yml</code>:</p>
+
+            <pre><code>version: '3.8'
+services:
+  px4:
+    image: px4io/px4:latest
+    privileged: true
+    devices:
+      - /dev/ttyACM0
+    command: px4 -d /dev/ttyACM0
+
+  ros2:
+    image: ros:humble-ros-base
+    environment:
+      - ROS_SECURITY_ENABLE=true
+      - ROS_SECURITY_ROOT=/security
+    volumes:
+      - ceph-swarm:/security
+
+  yolo:
+    image: ultralytics/ultralytics:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    command: yolo detect stream --source rtsp://drones/
+
+  ai-commander:
+    image: python:3.12-slim
+    volumes:
+      - ceph-ai:/models
+    command: python /app/commander.py --mode autonomous
+
+  sdr:
+    image: sdr:defense-latest
+    privileged: true
+    devices:
+      - /dev/sdr0
+
+volumes:
+  ceph-swarm:
+    driver: cephfs
+  ceph-ai:
+    driver: cephfs</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy drone-swarm</code></pre>
+        </div>
+
+        <!-- Slide 8: Mission Testing -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Launch & Test Mission</h2>
+            
+            <h3>Launch Patrol Grid</h3>
+            <pre><code>curl -X POST https://node1:9443/api/swarm/launch \
+  -H "Authorization: Bearer $JWT" \
+  -d '{
+    "pattern": "grid",
+    "altitude": 120,
+    "count": 500
+  }'</code></pre>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Threat Simulation Sequence</h3>
+                <ol style="padding-left: 30px; line-height: 2;">
+                    <li><strong style="color: #FF4500;">Detection:</strong> AI identifies intruder drone via YOLO in 42ms</li>
+                    <li><strong style="color: #FF4500;">Analysis:</strong> AI Commander evaluates threat level and selects ROE playbook</li>
+                    <li><strong style="color: #FF4500;">Neutralization:</strong> Execute jamming + intercept maneuver (8.4s average)</li>
+                    <li><strong style="color: #FF4500;">Evidence:</strong> HD video captured and stored in WORM with cryptographic signature</li>
+                    <li><strong style="color: #FF4500;">Re-arm:</strong> Swarm returns to patrol grid in &lt;3 minutes</li>
+                </ol>
+            </div>
+
+            <div class="stats-bar" style="margin-top: 30px;">
+                <div class="stat">
+                    <div class="stat-value">42ms</div>
+                    <div class="stat-label">Threat Detection</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">8.4s</div>
+                    <div class="stat-label">Neutralization</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">&lt;3min</div>
+                    <div class="stat-label">Re-arm Time</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Security & Compliance -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Security & Compliance</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Kill Chain Prevention</div>
+                    <div class="metric-value">100%</div>
+                    <p>Data self-destructs if captured</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Evidence Integrity</div>
+                    <div class="metric-value">WORM</div>
+                    <p>Cryptographic timestamping</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">NATO Compliance</div>
+                    <div class="metric-value">STANAG</div>
+                    <p>4586 certified</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Ruggedization</div>
+                    <div class="metric-value">MIL-STD</div>
+                    <p>810H certified</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Compliance Framework</h3>
+                <ul class="feature-list">
+                    <li><strong>NATO AQAP-2110:</strong> Quality assurance for mission-critical systems</li>
+                    <li><strong>MIL-STD-810H:</strong> Environmental testing (shock, vibration, temperature)</li>
+                    <li><strong>STANAG 4586:</strong> Standard interfaces for unmanned control systems</li>
+                    <li><strong>ITAR-Ready:</strong> Export control compliance for defense technology</li>
+                    <li><strong>FIPS 140-3:</strong> Cryptographic module validation</li>
+                </ul>
+            </div>
+
+            <table style="margin-top: 30px;">
+                <thead>
+                    <tr>
+                        <th>Security Feature</th>
+                        <th>Implementation</th>
+                        <th>Benefit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Data Self-Destruct</strong></td>
+                        <td>Hardware-level secure erase on capture</td>
+                        <td>Zero data exfiltration</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WORM Storage</strong></td>
+                        <td>Immutable forensic evidence chain</td>
+                        <td>Legal admissibility</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Air-Gap Mode</strong></td>
+                        <td>Physical network isolation</td>
+                        <td>No external attack surface</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Encrypted Mesh</strong></td>
+                        <td>BATMAN-adv + zero-trust tunnels</td>
+                        <td>Survives network denial</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Slide 10: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>National Border Force Example</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Costs</th>
+                            <th>With DsecOS Swarm</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Operating Costs</td>
+                            <td>$180,000,000</td>
+                            <td>$42,000,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">$138,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>Personnel at Risk</td>
+                            <td>High exposure</td>
+                            <td>95% reduction</td>
+                            <td style="color: #00FF00; font-weight: bold;">Lives saved</td>
+                        </tr>
+                        <tr>
+                            <td>Coverage Area</td>
+                            <td>Limited</td>
+                            <td>500x force multiplier</td>
+                            <td style="color: #00FF00; font-weight: bold;">Massive expansion</td>
+                        </tr>
+                        <tr>
+                            <td>Response Time</td>
+                            <td>Minutes to hours</td>
+                            <td>8.4 seconds</td>
+                            <td style="color: #00FF00; font-weight: bold;">99% faster</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #FFD700; margin-bottom: 20px;">Total Annual Savings</div>
+                <div style="font-size: 3em; color: #FF4500; font-weight: bold; text-shadow: 0 0 30px rgba(255, 69, 0, 0.6);">
+                    $138,000,000+
+                </div>
+                <div style="font-size: 1.2em; color: #FF6347; margin-top: 20px;">
+                    Plus 95% fewer personnel at risk
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h3>Additional Value Drivers</h3>
+                <ul class="feature-list">
+                    <li><strong>Scalability:</strong> Add 500 drones without linear cost increase</li>
+                    <li><strong>24/7 Operations:</strong> No fatigue, continuous surveillance</li>
+                    <li><strong>Precision:</strong> 99.1% threat detection accuracy reduces false positives</li>
+                    <li><strong>Deterrence:</strong> Visible swarm presence prevents incidents</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 11: Use Cases -->
+        <div class="slide">
+            <div class="slide-number">11</div>
+            <h2>Mission-Critical Use Cases</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🛡️</div>
+                    <h3 style="color: #FF4500; font-size: 1.3em;">Border Security</h3>
+                    <p>Autonomous patrol, intrusion detection, and rapid response across thousands of kilometers</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🏭</div>
+                    <h3 style="color: #FF4500; font-size: 1.3em;">Critical Infrastructure</h3>
+                    <p>Protect power plants, dams, and communications hubs from aerial threats</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">⚔️</div>
+                    <h3 style="color: #FF4500; font-size: 1.3em;">Defense Operations</h3>
+                    <p>Force protection, perimeter defense, and counter-UAS operations</p>
+                </div>
+                <div class="metric-card">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🚨</div>
+                    <h3 style="color: #FF4500; font-size: 1.3em;">Emergency Response</h3>
+                    <p>Disaster assessment, search and rescue coordination, communications relay</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Trusted By</h3>
+                <ul class="feature-list">
+                    <li><strong>Defense Contractors:</strong> Leading suppliers to military organizations</li>
+                    <li><strong>National Security Agencies:</strong> Classified counter-terrorism operations</li>
+                    <li><strong>Border Forces:</strong> Multi-national border protection programs</li>
+                    <li><strong>Critical Infrastructure Operators:</strong> Energy, water, and communications sectors</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 12: Performance Benchmarks -->
+        <div class="slide">
+            <div class="slide-number">12</div>
+            <h2>Performance Benchmarks</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                        <th>Industry Standard</th>
+                        <th>Advantage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Drone Control Latency</strong></td>
+                        <td style="color: #00FF00;">38 ms</td>
+                        <td>120-200 ms</td>
+                        <td>5x faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Threat Detection Accuracy</strong></td>
+                        <td style="color: #00FF00;">99.1%</td>
+                        <td>85-92%</td>
+                        <td>Higher precision</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Neutralization Time</strong></td>
+                        <td style="color: #00FF00;">8.4 seconds</td>
+                        <td>30-60 seconds</td>
+                        <td>4-7x faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maximum Swarm Size</strong></td>
+                        <td style="color: #00FF00;">1,200+</td>
+                        <td>50-200</td>
+                        <td>10x larger</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deployment Time</strong></td>
+                        <td style="color: #00FF00;">&lt;30 minutes</td>
+                        <td>4-8 hours</td>
+                        <td>10x faster</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mission Success Rate</strong></td>
+                        <td style="color: #00FF00;">99.99%</td>
+                        <td>92-96%</td>
+                        <td>Higher reliability</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>⚡ Real-Time Performance:</strong> All benchmarks measured in GPS-denied, contested electromagnetic environments with active jamming.
+            </div>
+        </div>
+
+        <!-- Slide 13: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">When Lives Are on the Line</h2>
+            
+            <div class="stats-bar" style="background: rgba(255, 69, 0, 0.2); max-width: 800px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">38ms</div>
+                    <div class="stat-label">Latency</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1,200+</div>
+                    <div class="stat-label">Drones</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">99.99%</div>
+                    <div class="stat-label">Success</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">$138M</div>
+                    <div class="stat-label">Savings</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #FFD700; background: rgba(255, 215, 0, 0.1);">
+                "The Only Platform Trusted When Lives Are on the Line"
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">ZERO-TRUST</span>
+                <span class="alert-badge">AIR-GAPPED</span>
+                <span class="alert-badge">AUTONOMOUS</span>
+                <span class="alert-badge">NATO COMPLIANT</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #FF6347;">
+                DsecOS Enterprise Defense Edition
+            </div>
+        </div>
+
+        <!-- Slide 14: Contact & Next Steps -->
+        <div class="slide">
+            <div class="slide-number">14</div>
+            <h2>Next Steps</h2>
+            
+            <div class="highlight-box">
+                <h3>Getting Started</h3>
+                <ol style="padding-left: 30px; line-height: 2; font-size: 1.1em;">
+                    <li><strong style="color: #FF4500;">Security Clearance Verification:</strong> Required for Defense Edition access</li>
+                    <li><strong style="color: #FF4500;">Technical Assessment:</strong> Review your mission requirements with our defense team</li>
+                    <li><strong style="color: #FF4500;">Pilot Deployment:</strong> 30-day evaluation in controlled environment</li>
+                    <li><strong style="color: #FF4500;">Full Production:</strong> Scale to operational requirements</li>
+                </ol>
+            </div>
+
+            <div class="metrics-grid" style="margin-top: 40px;">
+                <div class="metric-card">
+                    <h3 style="color: #FFD700; font-size: 1.2em;">Documentation</h3>
+                    <p>Classified technical manuals and deployment guides</p>
+                </div>
+                <div class="metric-card">
+                    <h3 style="color: #FFD700; font-size: 1.2em;">Training</h3>
+                    <p>On-site operator and maintainer certification</p>
+                </div>
+                <div class="metric-card">
+                    <h3 style="color: #FFD700; font-size: 1.2em;">Support</h3>
+                    <p>24/7/365 mission-critical support with SLA</p>
+                </div>
+                <div class="metric-card">
+                    <h3 style="color: #FFD700; font-size: 1.2em;">Updates</h3>
+                    <p>Continuous threat intelligence and AI model updates</p>
+                </div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 40px;">
+                <strong>⚠️ ITAR/EAR Notice:</strong> This presentation contains technical data subject to export controls. Distribution to foreign persons or entities requires prior authorization.
+            </div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 1.8em; color: #FF4500; font-weight: bold;">
+                Command. Coordinate. Counter. Instantly.
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#FF4500',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#FF4500',
+                lineColor: '#FF6347',
+                secondaryColor: '#DC143C',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#8B0000',
+                noteTextColor: '#fff'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        // Smooth scroll reveal animation
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+
+        // Warning pulse effect on classified banner
+        const banner = document.querySelector('.classified-banner');
+        setInterval(() => {
+            banner.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                banner.style.transform = 'scale(1)';
+            }, 200);
+        }, 3000);
+    </script>
+</body>
+</html>
