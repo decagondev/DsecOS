@@ -540,15 +540,15 @@ graph TD
     end
 
     subgraph "Swarm Control Stack"
-        PX4[PX4 Autopilot<br/>(500+ Drones)]
-        ROS[ROS 2 Humble<br/>(DDS-Security)]
-        YOLO[YOLOv9 + DeepSORT<br/>(Threat Detection)]
-        AI[AI Commander<br/>(RL Swarm Logic)]
+        PX4["PX4 Autopilot<br/>(500+ Drones)"]
+        ROS["ROS 2 Humble<br/>(DDS-Security)"]
+        YOLO["YOLOv9 + DeepSORT<br/>(Threat Detection)"]
+        AI["AI Commander<br/>(RL Swarm Logic)"]
     end
 
     subgraph "Countermeasures"
-        JAM[Software-Defined Radio<br/>(Jamming / Spoofing)]
-        MESH[BATMAN-adv Mesh<br/>(Self-Healing)]
+        JAM["Software-Defined Radio<br/>(Jamming / Spoofing)"]
+        MESH["BATMAN-adv Mesh<br/>(Self-Healing)"]
     end
 
     N1 <-->|Corosync HA<br/>Encrypted| N2

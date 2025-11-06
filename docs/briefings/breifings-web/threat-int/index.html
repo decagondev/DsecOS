@@ -691,15 +691,15 @@ graph TD
     end
 
     subgraph "Threat Intelligence Pipeline"
-        FEEDS[STIX/TAXII Feeds<br/>(AlienVault, FS-ISAC)]
-        MISP[MISP Instance<br/>(IOC Enrichment)]
-        ELASTIC[Elastic Stack<br/>(10M EPS)]
+        FEEDS["STIX/TAXII Feeds<br/>(AlienVault, FS-ISAC)"]
+        MISP["MISP Instance<br/>(IOC Enrichment)"]
+        ELASTIC["Elastic Stack<br/>(10M EPS)"]
     end
 
     subgraph "Response & Automation"
-        HIVE[TheHive<br/>(Case Mgmt)]
-        SOAR[n8n + StackStorm<br/>(200+ Playbooks)]
-        AI[AI Threat Hunter<br/>(Unsupervised ML)]
+        HIVE["TheHive<br/>(Case Mgmt)"]
+        SOAR["n8n + StackStorm<br/>(200+ Playbooks)"]
+        AI["AI Threat Hunter<br/>(Unsupervised ML)"]
     end
 
     N1 <-->|Corosync HA| N2
