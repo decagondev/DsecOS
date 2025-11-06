@@ -1,6 +1,5 @@
 # DsecOS – Secure Hypervisor Platform
 
-![DsecOS Logo](docs/assets/logo.svg)  
 **Secure. Isolated. Production-Ready.**
 
 DsecOS is a hardened, rebranded hypervisor built on Proxmox VE, designed for secure application hosting with zero-trust isolation. It combines KVM, LXC, Docker, and enterprise-grade security into a single, easy-to-deploy platform.
