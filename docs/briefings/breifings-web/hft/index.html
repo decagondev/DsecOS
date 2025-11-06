@@ -5,409 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DsecOS Enterprise - High-Frequency Trading Platform</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #001a00 0%, #003300 50%, #004d00 100%);
-            color: #e0e0e0;
-            overflow-x: hidden;
-        }
-
-        .presentation {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .slide {
-            background: linear-gradient(145deg, #0f1a0f 0%, #1a2e1a 100%);
-            border-radius: 20px;
-            padding: 60px;
-            margin: 40px 0;
-            box-shadow: 0 20px 60px rgba(0, 255, 0, 0.2), 0 0 100px rgba(127, 255, 0, 0.1);
-            border: 1px solid rgba(0, 255, 0, 0.4);
-            animation: slideIn 0.6s ease-out;
-            position: relative;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .title-slide {
-            text-align: center;
-            padding: 100px 60px;
-            background: linear-gradient(135deg, #000000 0%, #001a00 25%, #00FF00 75%, #7FFF00 100%);
-            border: 3px solid #00FF00;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .title-slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(0, 255, 0, 0.2) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(127, 255, 0, 0.2) 0%, transparent 40%);
-            animation: neonPulse 8s linear infinite;
-        }
-
-        @keyframes neonPulse {
-            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
-            50% { opacity: 0.8; transform: rotate(180deg); }
-        }
-
-        .title-slide h1 {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #00FF00, #7FFF00, #ADFF2F);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
-        }
-
-        .title-slide .subtitle {
-            font-size: 1.5em;
-            color: #90EE90;
-            margin-bottom: 15px;
-            font-weight: 300;
-            position: relative;
-            z-index: 1;
-        }
-
-        .title-slide .tagline {
-            font-size: 1.3em;
-            color: #FFD700;
-            font-style: italic;
-            font-weight: 700;
-            letter-spacing: 3px;
-            position: relative;
-            z-index: 1;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            color: #00FF00;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #00FF00;
-            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-        }
-
-        h3 {
-            color: #7FFF00;
-            font-size: 1.8em;
-            margin: 30px 0 20px 0;
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(127, 255, 0, 0.1));
-            border-left: 5px solid #00FF00;
-            padding: 25px;
-            margin: 25px 0;
-            border-radius: 10px;
-            box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .metric-card {
-            background: linear-gradient(135deg, rgba(0, 255, 0, 0.15), rgba(127, 255, 0, 0.15));
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 255, 0, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(0, 255, 0, 0.3) 0%, transparent 70%);
-            transition: all 0.3s ease;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.5);
-            border-color: #00FF00;
-        }
-
-        .metric-card:hover::before {
-            top: -25%;
-            right: -25%;
-        }
-
-        .metric-value {
-            font-size: 2.5em;
-            color: #00FF00;
-            font-weight: bold;
-            margin: 10px 0;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
-        .metric-label {
-            color: #90EE90;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hft-banner {
-            background: linear-gradient(90deg, #00FF00, #7FFF00, #00FF00);
-            color: #000;
-            text-align: center;
-            padding: 12px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(0, 255, 0, 0.5);
-            border-bottom: 2px solid #FFD700;
-        }
-
-        .alert-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #00FF00, #7FFF00);
-            color: #000;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 5px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th {
-            background: linear-gradient(135deg, #00FF00, #7FFF00);
-            color: #000;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
-        }
-
-        tr:hover {
-            background: rgba(0, 255, 0, 0.08);
-        }
-
-        .diagram-container {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 30px;
-            border-radius: 15px;
-            margin: 30px 0;
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
-        }
-
-        code {
-            background: rgba(0, 255, 0, 0.15);
-            padding: 3px 8px;
-            border-radius: 5px;
-            color: #90EE90;
-            font-family: 'Courier New', monospace;
-        }
-
-        pre {
-            background: #000000;
-            padding: 25px;
-            border-radius: 10px;
-            overflow-x: auto;
-            border: 1px solid #00FF00;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-        }
-
-        pre code {
-            background: none;
-            padding: 0;
-            color: #90EE90;
-        }
-
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-list li {
-            padding: 15px 15px 15px 45px;
-            margin: 10px 0;
-            background: rgba(0, 255, 0, 0.05);
-            border-radius: 8px;
-            position: relative;
-            border-left: 3px solid #00FF00;
-        }
-
-        .feature-list li:before {
-            content: "◆";
-            position: absolute;
-            left: 15px;
-            color: #00FF00;
-            font-weight: bold;
-            font-size: 1.3em;
-        }
-
-        .quote {
-            font-size: 1.2em;
-            font-style: italic;
-            color: #FFD700;
-            padding: 20px 40px;
-            border-left: 4px solid #00FF00;
-            margin: 30px 0;
-            background: rgba(0, 255, 0, 0.05);
-        }
-
-        .navigation {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            gap: 15px;
-            z-index: 1000;
-        }
-
-        .nav-btn {
-            background: linear-gradient(135deg, #00FF00, #7FFF00);
-            color: #000;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
-        }
-
-        .nav-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.6);
-        }
-
-        .slide-number {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            background: rgba(0, 255, 0, 0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            color: #00FF00;
-            border: 1px solid #00FF00;
-        }
-
-        .warning-box {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 0, 0.1));
-            border: 2px solid #FFD700;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-
-        .warning-box strong {
-            color: #FFD700;
-        }
-
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(0, 255, 0, 0.1);
-            border-radius: 10px;
-            border: 1px solid rgba(0, 255, 0, 0.3);
-        }
-
-        .stats-bar .stat {
-            text-align: center;
-        }
-
-        .stats-bar .stat-value {
-            font-size: 2em;
-            color: #00FF00;
-            font-weight: bold;
-        }
-
-        .stats-bar .stat-label {
-            color: #90EE90;
-            font-size: 0.9em;
-        }
-
-        .mermaid {
-            background: transparent;
-        }
-
-        .latency-highlight {
-            background: linear-gradient(90deg, 
-                rgba(0, 255, 0, 0.2) 0%, 
-                rgba(127, 255, 0, 0.2) 25%,
-                rgba(0, 255, 0, 0.2) 50%,
-                rgba(127, 255, 0, 0.2) 75%,
-                rgba(0, 255, 0, 0.2) 100%);
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #00FF00;
-            margin: 30px 0;
-            animation: latencyPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes latencyPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(0, 255, 0, 0.6); }
-        }
-    </style>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="hft-banner">⚡ HFT EDITION - SUB-MILLISECOND LATENCY ⚡</div>
@@ -538,24 +136,20 @@ graph TD
         N2[DsecOS Node 2<br/>Execution Engine]
         N3[DsecOS Node 3<br/>Risk + Audit + WORM]
     end
-
     subgraph "HFT Pipeline"
         FEED["Exchange Feeds<br/>(ITCH, MDP, SIP)"]
         MDH["Market Data Handler<br/>(DPDK + FPGA)"]
         EXEC["Order Execution<br/>(Binary Gateway)"]
         RISK["Pre-Trade Risk<br/>(1.8 µs)"]
     end
-
     subgraph "Compliance & Intelligence"
         AI["AI Arb Detector<br/>(Latency Patterns)"]
         LOG["Tick Audit Logger<br/>(WORM + Crypto)"]
         LIC[License Server<br/>HFT Edition]
     end
-
     N1 <-->|Corosync HA<br/>1 µs Sync| N2
     N2 <--> N3
     N1 --> CEPH[Ceph WORM Pool<br/>Sub-Nanosecond Timestamps]
-
     FEED --> N1
     MDH --> N1
     EXEC --> N2
@@ -563,10 +157,10 @@ graph TD
     AI --> N1
     LOG --> N3
     CEPH --> LOG
-
     style N1 fill:#121212,stroke:#00FF00,color:#FFF
     style MDH fill:#1E1E1E,stroke:#00FF00,color:#FFF
     style RISK fill:#8B0000,color:#FFF
+
                 </div>
             </div>
         </div>
@@ -595,6 +189,7 @@ journey
       Generate CAT Report: 5: Auto-Export
       Replay Full Day: 4: Forensic Tool
       Zero Downtime Failover: 5: HA Cluster
+
                 </div>
             </div>
         </div>
@@ -879,11 +474,11 @@ dsecos audit export --format cat --date 2025-11-06</code></pre>
             startOnLoad: true,
             theme: 'dark',
             themeVariables: {
-                primaryColor: '#00FF00',
+                primaryColor: '#00BFFF',
                 primaryTextColor: '#000',
-                primaryBorderColor: '#00FF00',
-                lineColor: '#90EE90',
-                secondaryColor: '#7FFF00',
+                primaryBorderColor: '#00BFFF',
+                lineColor: '#87CEEB',
+                secondaryColor: '#1E90FF',
                 tertiaryColor: '#0a0a0a',
                 noteBkgColor: '#7FFF00',
                 noteTextColor: '#000'

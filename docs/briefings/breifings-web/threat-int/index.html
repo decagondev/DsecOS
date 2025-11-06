@@ -5,473 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DsecOS Enterprise - Threat Intelligence & SOAR</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0d0208 0%, #1a0f1e 50%, #2d1b3d 100%);
-            color: #e0e0e0;
-            overflow-x: hidden;
-        }
-
-        .presentation {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .slide {
-            background: linear-gradient(145deg, #0f0a14 0%, #1a1028 100%);
-            border-radius: 20px;
-            padding: 60px;
-            margin: 40px 0;
-            box-shadow: 0 20px 60px rgba(138, 43, 226, 0.2), 0 0 100px rgba(147, 51, 234, 0.1);
-            border: 1px solid rgba(138, 43, 226, 0.4);
-            animation: slideIn 0.6s ease-out;
-            position: relative;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .title-slide {
-            text-align: center;
-            padding: 100px 60px;
-            background: linear-gradient(135deg, #000000 0%, #1a0f1e 25%, #6a0dad 75%, #8a2be2 100%);
-            border: 3px solid #8a2be2;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .title-slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 30% 40%, rgba(138, 43, 226, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 70% 60%, rgba(147, 51, 234, 0.2) 0%, transparent 50%);
-            animation: threatPulse 6s ease-in-out infinite;
-        }
-
-        @keyframes threatPulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-        }
-
-        .title-slide h1 {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #8a2be2, #9370db, #ba55d3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
-        }
-
-        .title-slide .subtitle {
-            font-size: 1.5em;
-            color: #da70d6;
-            margin-bottom: 15px;
-            font-weight: 300;
-            position: relative;
-            z-index: 1;
-        }
-
-        .title-slide .tagline {
-            font-size: 1.3em;
-            color: #00ff88;
-            font-style: italic;
-            font-weight: 700;
-            letter-spacing: 3px;
-            position: relative;
-            z-index: 1;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            color: #8a2be2;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #8a2be2;
-            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
-        }
-
-        h3 {
-            color: #9370db;
-            font-size: 1.8em;
-            margin: 30px 0 20px 0;
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(147, 51, 234, 0.1));
-            border-left: 5px solid #8a2be2;
-            padding: 25px;
-            margin: 25px 0;
-            border-radius: 10px;
-            box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.1);
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .metric-card {
-            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(147, 51, 234, 0.15));
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid rgba(138, 43, 226, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%);
-            transition: all 0.3s ease;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.5);
-            border-color: #8a2be2;
-        }
-
-        .metric-card:hover::before {
-            top: -25%;
-            right: -25%;
-        }
-
-        .metric-value {
-            font-size: 2.5em;
-            color: #8a2be2;
-            font-weight: bold;
-            margin: 10px 0;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-        }
-
-        .metric-label {
-            color: #da70d6;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .soc-banner {
-            background: linear-gradient(90deg, #6a0dad, #8a2be2, #6a0dad);
-            color: white;
-            text-align: center;
-            padding: 12px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.5);
-            border-bottom: 2px solid #00ff88;
-        }
-
-        .alert-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #8a2be2, #9370db);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 5px;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th {
-            background: linear-gradient(135deg, #8a2be2, #6a0dad);
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
-        }
-
-        tr:hover {
-            background: rgba(138, 43, 226, 0.08);
-        }
-
-        .diagram-container {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 30px;
-            border-radius: 15px;
-            margin: 30px 0;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.15);
-        }
-
-        code {
-            background: rgba(138, 43, 226, 0.15);
-            padding: 3px 8px;
-            border-radius: 5px;
-            color: #da70d6;
-            font-family: 'Courier New', monospace;
-        }
-
-        pre {
-            background: #000000;
-            padding: 25px;
-            border-radius: 10px;
-            overflow-x: auto;
-            border: 1px solid #8a2be2;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
-        }
-
-        pre code {
-            background: none;
-            padding: 0;
-            color: #da70d6;
-        }
-
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-list li {
-            padding: 15px 15px 15px 45px;
-            margin: 10px 0;
-            background: rgba(138, 43, 226, 0.05);
-            border-radius: 8px;
-            position: relative;
-            border-left: 3px solid #8a2be2;
-        }
-
-        .feature-list li:before {
-            content: "⚡";
-            position: absolute;
-            left: 15px;
-            color: #8a2be2;
-            font-weight: bold;
-            font-size: 1.3em;
-        }
-
-        .quote {
-            font-size: 1.2em;
-            font-style: italic;
-            color: #00ff88;
-            padding: 20px 40px;
-            border-left: 4px solid #8a2be2;
-            margin: 30px 0;
-            background: rgba(138, 43, 226, 0.05);
-        }
-
-        .navigation {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            gap: 15px;
-            z-index: 1000;
-        }
-
-        .nav-btn {
-            background: linear-gradient(135deg, #8a2be2, #6a0dad);
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-        }
-
-        .nav-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6);
-        }
-
-        .slide-number {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            background: rgba(138, 43, 226, 0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            color: #8a2be2;
-            border: 1px solid #8a2be2;
-        }
-
-        .warning-box {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(138, 43, 226, 0.1));
-            border: 2px solid #00ff88;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
-        }
-
-        .warning-box strong {
-            color: #00ff88;
-        }
-
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(138, 43, 226, 0.1);
-            border-radius: 10px;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-        }
-
-        .stats-bar .stat {
-            text-align: center;
-        }
-
-        .stats-bar .stat-value {
-            font-size: 2em;
-            color: #8a2be2;
-            font-weight: bold;
-        }
-
-        .stats-bar .stat-label {
-            color: #da70d6;
-            font-size: 0.9em;
-        }
-
-        .mermaid {
-            background: transparent;
-        }
-
-        .mitre-attack {
-            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(0, 255, 136, 0.05));
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #8a2be2;
-            margin: 30px 0;
-        }
-
-        .threat-feed-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .threat-feed-card {
-            background: rgba(138, 43, 226, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .threat-feed-card:hover {
-            transform: translateY(-3px);
-            border-color: #8a2be2;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-        }
-
-        .automation-highlight {
-            background: linear-gradient(90deg, 
-                rgba(138, 43, 226, 0.2) 0%, 
-                rgba(147, 51, 234, 0.2) 25%,
-                rgba(138, 43, 226, 0.2) 50%,
-                rgba(147, 51, 234, 0.2) 75%,
-                rgba(138, 43, 226, 0.2) 100%);
-            padding: 25px;
-            border-radius: 15px;
-            border: 2px solid #8a2be2;
-            margin: 30px 0;
-            animation: automationPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes automationPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.6); }
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 40px;
-            margin: 30px 0;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, #8a2be2, #6a0dad);
-        }
-
-        .timeline-item {
-            position: relative;
-            padding: 20px;
-            margin-bottom: 20px;
-            background: rgba(138, 43, 226, 0.1);
-            border-radius: 10px;
-            border-left: 3px solid #8a2be2;
-        }
-
-        .timeline-item::before {
-            content: '●';
-            position: absolute;
-            left: -43px;
-            top: 20px;
-            color: #8a2be2;
-            font-size: 1.5em;
-        }
-    </style>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <div class="soc-banner">🛡️ SOC EDITION - AUTONOMOUS CYBER DEFENSE 🛡️</div>
@@ -689,26 +223,23 @@ graph TD
         N5[DsecOS Node 5<br/>SOAR Engine + AI]
         N6[DsecOS Node 6<br/>Ceph OSD + WORM]
     end
-
     subgraph "Threat Intelligence Pipeline"
         FEEDS["STIX/TAXII Feeds<br/>(AlienVault, FS-ISAC)"]
         MISP["MISP Instance<br/>(IOC Enrichment)"]
         ELASTIC["Elastic Stack<br/>(10M EPS)"]
     end
-
     subgraph "Response & Automation"
         HIVE["TheHive<br/>(Case Mgmt)"]
         SOAR["n8n + StackStorm<br/>(200+ Playbooks)"]
         AI["AI Threat Hunter<br/>(Unsupervised ML)"]
     end
-
+    CEPH[Ceph WORM Pool<br/>Forensic Storage]
     N1 <-->|Corosync HA| N2
     N2 <--> N3
     N3 <--> N4
     N4 <--> N5
     N5 <--> N6
-    N1 --> CEPH[Ceph WORM Pool<br/>Forensic Storage]
-
+    N1 --> CEPH
     FEEDS --> N2
     MISP --> N3
     ELASTIC --> N4
@@ -717,10 +248,10 @@ graph TD
     AI --> N3
     CEPH --> ELASTIC
     CEPH --> HIVE
-
     style N1 fill:#121212,stroke:#8a2be2,color:#FFF
     style AI fill:#8B0000,color:#FFF
     style CEPH fill:#1E1E1E,color:#FFF
+
                 </div>
             </div>
         </div>
@@ -731,25 +262,28 @@ graph TD
             <h2>Automated Incident Response Flow</h2>
             <div class="diagram-container">
                 <div class="mermaid">
-journey
-    title SOAR Incident Response Flow
-    section Ingest
-      Ingest 50+ Threat Feeds: 5: Auto-STIX
-      Enrich IOCs in MISP: 5: Real-Time
-      Index in Elastic: 4: Sub-Second
-    section Detect
-      AI Flags Phishing Domain: 5: Behavioral ML
-      Correlate with 3 Logs: 4: Elastic DSL
-      Auto-Create Case in TheHive: 5: SOAR Trigger
-    section Respond
-      Execute Playbook #47: 5: n8n
-      Quarantine Endpoint: 4: API to EDR
-      Takedown Domain: 4: Registrar API
-      Notify SOC Analyst: 3: Slack + Email
-    section Hunt & Report
-      Proactive Hunt (YARA): 3: Daily
-      Generate MITRE ATT&CK Report: 5: Compliance
-      Archive to WORM: 5: Legal Hold
+                    flowchart TD
+                    subgraph Ingest
+                        A1["Ingest 50+ Threat Feeds\n(Auto-STIX)"] --> A2["Enrich IOCs in MISP\n(Real-Time)"]
+                        A2 --> A3["Index in Elastic\n(Sub-Second)"]
+                    end
+                    subgraph Detect
+                        B1["AI Flags Phishing Domain\n(Behavioral ML)"] --> B2["Correlate with 3 Logs\n(Elastic DSL)"]
+                        B2 --> B3["Auto-Create Case in TheHive\n(SOAR Trigger)"]
+                    end
+                    subgraph Respond
+                        C1["Execute Playbook #47\n(n8n)"] --> C2["Quarantine Endpoint\n(API to EDR)"]
+                        C2 --> C3["Takedown Domain\n(Registrar API)"]
+                        C3 --> C4["Notify SOC Analyst\n(Slack + Email)"]
+                    end
+                    subgraph Hunt_and_Report
+                        D1["Proactive Hunt (YARA)\n(Daily)"] --> D2["Generate MITRE ATT&CK Report\n(Compliance)"]
+                        D2 --> D3["Archive to WORM\n(Legal Hold)" ]
+                    end
+                
+                    A3 --> B1 --> C1 --> D1
+                
+                                
                 </div>
             </div>
         </div>
@@ -937,11 +471,11 @@ curl -X POST http://misp:8080/events \
             startOnLoad: true,
             theme: 'dark',
             themeVariables: {
-                primaryColor: '#8a2be2',
+                primaryColor: '#00BFFF',
                 primaryTextColor: '#e0e0e0',
-                primaryBorderColor: '#9370db',
-                lineColor: '#8a2be2',
-                secondaryColor: '#1a0f1e',
+                primaryBorderColor: '#00BFFF',
+                lineColor: '#87CEEB',
+                secondaryColor: '#1E90FF',
                 tertiaryColor: '#0f0a14'
             }
         });
