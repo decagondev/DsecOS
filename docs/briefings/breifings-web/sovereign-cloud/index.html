@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DsecOS Enterprise - Zero-Trust Sovereign Cloud</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #162447 50%, #1f4068 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .presentation {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: linear-gradient(145deg, #0d1117 0%, #1a1f35 100%);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0, 191, 255, 0.2), 0 0 100px rgba(30, 144, 255, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-slide {
+            text-align: center;
+            padding: 100px 60px;
+            background: linear-gradient(135deg, #000000 0%, #0a1931 25%, #185adb 75%, #00BFFF 100%);
+            border: 3px solid #00BFFF;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 191, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(30, 144, 255, 0.2) 0%, transparent 40%);
+            animation: sovereignPulse 8s linear infinite;
+        }
+
+        @keyframes sovereignPulse {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg); }
+            50% { opacity: 0.6; transform: rotate(180deg); }
+        }
+
+        .title-slide h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00BFFF, #1E90FF, #4169E1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(0, 191, 255, 0.5);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            color: #87CEEB;
+            margin-bottom: 15px;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-slide .tagline {
+            font-size: 1.3em;
+            color: #FFD700;
+            font-style: italic;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #00BFFF;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #00BFFF;
+            text-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+        }
+
+        h3 {
+            color: #1E90FF;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.1), rgba(30, 144, 255, 0.1));
+            border-left: 5px solid #00BFFF;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 191, 255, 0.1);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(30, 144, 255, 0.15));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.5);
+            border-color: #00BFFF;
+        }
+
+        .metric-card:hover::before {
+            top: -25%;
+            right: -25%;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            color: #00BFFF;
+            font-weight: bold;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+        }
+
+        .metric-label {
+            color: #87CEEB;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sovereign-banner {
+            background: linear-gradient(90deg, #1E90FF, #00BFFF, #1E90FF);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.5);
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00BFFF, #1E90FF);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #00BFFF, #1E90FF);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        tr:hover {
+            background: rgba(0, 191, 255, 0.08);
+        }
+
+        .diagram-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.15);
+        }
+
+        code {
+            background: rgba(0, 191, 255, 0.15);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #87CEEB;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            border: 1px solid #00BFFF;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #87CEEB;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 15px 15px 15px 45px;
+            margin: 10px 0;
+            background: rgba(0, 191, 255, 0.05);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid #00BFFF;
+        }
+
+        .feature-list li:before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #00BFFF;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #FFD700;
+            padding: 20px 40px;
+            border-left: 4px solid #00BFFF;
+            margin: 30px 0;
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #00BFFF, #1E90FF);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 191, 255, 0.6);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: rgba(0, 191, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #00BFFF;
+            border: 1px solid #00BFFF;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 191, 255, 0.1));
+            border: 2px solid #FFD700;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .warning-box strong {
+            color: #FFD700;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .stats-bar .stat {
+            text-align: center;
+        }
+
+        .stats-bar .stat-value {
+            font-size: 2em;
+            color: #00BFFF;
+            font-weight: bold;
+        }
+
+        .stats-bar .stat-label {
+            color: #87CEEB;
+            font-size: 0.9em;
+        }
+
+        .mermaid {
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="sovereign-banner">🏛️ SOVEREIGN EDITION - NATIONAL INFRASTRUCTURE 🏛️</div>
+    
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>DsecOS Enterprise</h1>
+            <div class="subtitle">Zero-Trust Sovereign Cloud for Government</div>
+            <div class="tagline">Your Data. Your Rules. Your Nation.</div>
+            <div style="margin-top: 40px;">
+                <span class="alert-badge">Unbreachable</span>
+                <span class="alert-badge">Uncompromising</span>
+                <span class="alert-badge">Sovereign</span>
+                <span class="alert-badge">Air-Gapped</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h2>Platform Overview</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                A <strong style="color: #00BFFF;">fully sovereign, air-gapped government cloud</strong> for classified workloads, citizen services, and critical national infrastructure. It delivers <strong style="color: #87CEEB;">multi-tenanted, zero-trust isolation</strong> across departments while enforcing <strong style="color: #87CEEB;">data residency</strong>, <strong style="color: #87CEEB;">cryptographic sovereignty</strong>, and <strong style="color: #FFD700;">real-time auditability</strong> — all without reliance on foreign vendors.
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Isolated Agencies</div>
+                    <div class="metric-value">1,000+</div>
+                    <p>On single cluster</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Data Residency</div>
+                    <div class="metric-value">100%</div>
+                    <p>Local key management</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Cloud Spend Cut</div>
+                    <div class="metric-value">70%</div>
+                    <p>Vs. hyperscalers</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Failover Time</div>
+                    <div class="metric-value">4.2s</div>
+                    <p>Offline failover</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Business Value</h3>
+                <ul class="feature-list">
+                    <li><strong>Eliminate Foreign Vendor Risk:</strong> Full source control</li>
+                    <li><strong>Reduce Cloud Spend by 70%:</strong> Vs. hyperscalers</li>
+                    <li><strong>Achieve NCSC, BSI, ANSSI Compliance:</strong> Out-of-the-box</li>
+                    <li><strong>Enable Secure Inter-Agency Collaboration:</strong> Without data fusion</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚡ Trusted By:</strong> Sovereign governments, defense ministries, and public sector agencies
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h2>Technical Foundation</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Role</th>
+                        <th>Sovereignty Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Agency Portal</strong></td>
+                        <td>Self-service VM/container provisioning</td>
+                        <td>JWT + X.509 client certs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Key Management Service</strong></td>
+                        <td>Local HSM (Thales/nCipher)</td>
+                        <td>FIPS 140-3 Level 4</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ceph Sovereign</strong></td>
+                        <td>Encrypted, geo-redundant storage</td>
+                        <td>UK/EU-only nodes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AI Policy Engine</strong></td>
+                        <td>Real-time DLP + behavior analytics</td>
+                        <td>On-prem ML models</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Fortress</strong></td>
+                        <td>Legal-grade forensic chain</td>
+                        <td>TPM-sealed, WORM</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>Platform Security</h3>
+                <ul class="feature-list">
+                    <li><strong>Kernel:</strong> UK NCSC-hardened with mandatory access control (MAC)</li>
+                    <li><strong>Crypto:</strong> HSM-integrated, post-quantum ready (Kyber + Dilithium)</li>
+                    <li><strong>Tenancy:</strong> Per-agency LXC + SELinux agency_t domains</li>
+                    <li><strong>Audit:</strong> Immutable, cryptographically chained logs (WORM + TPM)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Deployment Architecture -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h2>Sovereign Cloud Architecture</h2>
+            <p style="color: #87CEEB; margin-bottom: 20px; font-weight: 600;">12-Node National Data Center (Tier IV)</p>
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TD
+    subgraph "DsecOS Sovereign Cloud (12 Nodes)"
+        N1[DsecOS Node 1<br/>Control Plane + HSM]
+        N2[DsecOS Node 2<br/>Agency A (Defense)]
+        N3[DsecOS Node 3<br/>Agency B (Health)]
+        N4[DsecOS Node 4<br/>Agency C (Finance)]
+        N5-N12[Nodes 5–12<br/>Ceph OSD + WORM<br/>Geo-Redundant]
+    end
+
+    subgraph "Multi-Tenant Workloads"
+        DEF[Defense Apps<br/>(Classified)]
+        HEALTH[Citizen Health Portal<br/>(PII)]
+        FIN[Tax & Revenue<br/>(Financial)]
+    end
+
+    subgraph "Sovereign Services"
+        KMS[Local HSM<br/>(Key Custody)]
+        AI[AI DLP Engine<br/>(On-Prem)]
+        AUDIT[Audit Fortress<br/>(WORM + TPM)]
+        LIC[License Server<br/>Sovereign JWT]
+    end
+
+    N1 <-->|Corosync HA<br/>Encrypted Mesh| N2
+    N2 <--> N3
+    N3 <--> N4
+    N1 --> CEPH[Ceph Sovereign Pool<br/>UK-Only + WORM]
+
+    DEF --> N2
+    HEALTH --> N3
+    FIN --> N4
+    KMS --> N1
+    AI --> N1
+    AUDIT --> N1
+    CEPH --> DEF
+    CEPH --> HEALTH
+    CEPH --> FIN
+
+    style N1 fill:#121212,stroke:#00BFFF,color:#FFF
+    style DEF fill:#8B0000,color:#FFF
+    style KMS fill:#1E1E1E,color:#FFF
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: User Flow -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h2>Agency Onboarding & Operation Flow</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+journey
+    title Sovereign Cloud Agency Lifecycle
+    section Onboarding
+      Issue X.509 Agency Cert: 5: PKI Admin
+      PXE Deploy 12 Nodes: 5: NOC
+      Activate Sovereign License: 5: CISO
+    section Agency Setup
+      Create Agency Tenant: 5: Portal
+      Assign SELinux Domain: 5: Auto-Policy
+      Provision 500 VMs: 4: Self-Service
+    section Operation
+      Citizen Logs In (Health): 5: OAuth2 + MFA
+      AI Blocks PII Leak: 5: Real-Time DLP
+      Inter-Agency Query (Approved): 4: Audit Gate
+    section Audit & Assurance
+      Generate NCSC Report: 5: One-Click
+      Forensic Replay (3 Months): 5: TPM-Sealed
+      Offline Failover Test: 5: Annual
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deployment Guide -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h2>Deployment Requirements</h2>
+            
+            <div class="warning-box">
+                <strong>⚡ Prerequisites:</strong> DsecOS Enterprise Sovereign Edition license (government-only), 12x servers (256 GB RAM, 32-core CPU, 16 TB NVMe, HSM-ready), dual dark fiber + air-gapped backup
+            </div>
+
+            <h3>Step 1: Provision Sovereign Core</h3>
+            <pre><code>/scripts/pxe-deploy.sh --cluster gov-cloud --nodes 12 --sovereign-mode --hsm-integrate --geo-redundant</code></pre>
+
+            <h3>Step 2: Deploy Sovereign Stack</h3>
+            <p style="font-size: 1.1em; margin-bottom: 20px;">Create <code>/templates/stacks/sovereign-cloud.yml</code>:</p>
+            <pre><code>version: '3.8'
+services:
+  portal:
+    image: dsecos/portal-sovereign:latest
+    ports:
+      - "9443:9443"
+    environment:
+      - PKI_CA=/certs/gov-ca.pem
+      - JWT_ISSUER=uk-gov-cloud
+
+  kms:
+    image: dsecos/kms-hsm:latest
+    devices:
+      - /dev/hsm0
+    command: --mode fips --policy uk-ncsc
+
+  ai-dlp:
+    image: dsecos/ai-sovereign:latest
+    volumes:
+      - ceph-models:/models
+    command: monitor --agencies all --block pii,classified
+
+  audit:
+    image: dsecos/audit-fortress:latest
+    volumes:
+      - ceph-worm:/audit
+    command: --worm --tpm-seal --chain sha3-512
+
+  agency-template:
+    image: debian:12
+    security_opt:
+      - label=type:agency_t
+    volumes:
+      - ceph-agency:/data
+    isolation: lxc
+
+volumes:
+  ceph-models:
+    driver: cephfs
+    driver_opts:
+      worm: false
+  ceph-worm:
+    driver: cephfs
+    driver_opts:
+      worm: true
+  ceph-agency:
+    driver: cephfs</code></pre>
+
+            <h3>Deploy Command</h3>
+            <pre><code>dsecos deploy sovereign-cloud</code></pre>
+        </div>
+
+        <!-- Slide 7: Onboard Agency -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h2>Onboard First Agency</h2>
+            
+            <pre><code># Via portal UI
+POST /api/agencies
+{
+  "name": "mod-defense",
+  "domain": "defense_t",
+  "quota": {"cpu": 128, "ram": "1TB", "storage": "50TB"}
+}</code></pre>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Test Data Residency</h3>
+                <pre><code># Verify no data leaves UK
+dsecos audit trace --agency mod-defense --dataflow
+# → All paths: UK-only</code></pre>
+                <ul class="feature-list" style="margin-top: 20px;">
+                    <li><strong>Auto-Provisions:</strong> Isolated tenant with SELinux domain</li>
+                    <li><strong>Data Residency:</strong> 100% UK-only data paths verified</li>
+                    <li><strong>Compliance:</strong> NCSC CAF, EU NIS2, BSI C5 ready</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Security & Sovereignty -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h2>Security & Sovereignty</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Tenant Isolation</div>
+                    <div class="metric-value">100%</div>
+                    <p>SELinux MAC</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Audit Chain Integrity</div>
+                    <div class="metric-value">100%</div>
+                    <p>TPM + WORM</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">PII Detection</div>
+                    <div class="metric-value">99.97%</div>
+                    <p>AI accuracy</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Vendor Independence</div>
+                    <div class="metric-value">100%</div>
+                    <p>Full source control</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Sovereignty Features</h3>
+                <ul class="feature-list">
+                    <li><strong>Vendor Independence:</strong> Full source access, no backdoors</li>
+                    <li><strong>Crypto Sovereignty:</strong> Keys never leave HSM</li>
+                    <li><strong>Compliance:</strong> NCSC CAF, EU NIS2, BSI C5</li>
+                    <li><strong>Data Residency:</strong> 100% local key management</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Performance Metrics -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h2>Performance & Assurance Metrics</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tenant Isolation</strong></td>
+                        <td style="color: #00FF00;">100% (SELinux MAC)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Audit Chain Integrity</strong></td>
+                        <td style="color: #00FF00;">100% (TPM + WORM)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Failover Time</strong></td>
+                        <td style="color: #00FF00;">4.2 seconds</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PII Detection Accuracy</strong></td>
+                        <td style="color: #00FF00;">99.97%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="stats-bar" style="margin-top: 40px;">
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Isolation</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Integrity</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">4.2s</div>
+                    <div class="stat-label">Failover</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">99.97%</div>
+                    <div class="stat-label">PII Detection</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: ROI Analysis -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h2>Return on Investment</h2>
+            
+            <div class="highlight-box">
+                <h3>National Government Example (50 Agencies)</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Current Costs</th>
+                            <th>With DsecOS Sovereign</th>
+                            <th>Savings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Annual Operating Costs</td>
+                            <td>£420,000,000</td>
+                            <td>£98,000,000</td>
+                            <td style="color: #00FF00; font-weight: bold;">£322,000,000</td>
+                        </tr>
+                        <tr>
+                            <td>Vendor Lock-In Risk</td>
+                            <td>High</td>
+                            <td>Zero</td>
+                            <td style="color: #00FF00; font-weight: bold;">Eliminated</td>
+                        </tr>
+                        <tr>
+                            <td>Data Sovereignty</td>
+                            <td>Partial</td>
+                            <td>100%</td>
+                            <td style="color: #00FF00; font-weight: bold;">Full Control</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="font-size: 1.5em; color: #87CEEB; margin-bottom: 20px;">Total Annual Savings</div>
+                <div style="font-size: 3em; color: #00BFFF; font-weight: bold; text-shadow: 0 0 30px rgba(0, 191, 255, 0.6);">
+                    £322,000,000+
+                </div>
+                <div style="font-size: 1.2em; color: #FFD700; margin-top: 20px;">
+                    Plus full control and sovereignty
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusion -->
+        <div class="slide title-slide">
+            <h2 style="border: none; margin-bottom: 40px;">The Only Cloud a Nation Can Trust</h2>
+            
+            <div class="stats-bar" style="background: rgba(0, 191, 255, 0.2); max-width: 900px; margin: 40px auto;">
+                <div class="stat">
+                    <div class="stat-value">1,000+</div>
+                    <div class="stat-label">Agencies</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Sovereign</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">£322M</div>
+                    <div class="stat-label">Savings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">NCSC</div>
+                    <div class="stat-label">Certified</div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 50px; font-size: 1.4em; border-left: 4px solid #FFD700; background: rgba(255, 215, 0, 0.1);">
+                "National Digital Infrastructure. Unbreachable. Uncompromising."
+            </div>
+
+            <div style="margin-top: 60px;">
+                <span class="alert-badge">ZERO-TRUST</span>
+                <span class="alert-badge">AIR-GAPPED</span>
+                <span class="alert-badge">SOVEREIGN</span>
+                <span class="alert-badge">GOVERNMENT CERTIFIED</span>
+            </div>
+
+            <div style="margin-top: 50px; font-size: 1.3em; color: #87CEEB;">
+                DsecOS Enterprise Sovereign Edition
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="scrollToTop()">↑ Top</button>
+        <button class="nav-btn" onclick="scrollToBottom()">↓ Bottom</button>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#00BFFF',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#00BFFF',
+                lineColor: '#87CEEB',
+                secondaryColor: '#1E90FF',
+                tertiaryColor: '#0a0a0a',
+                noteBkgColor: '#1E90FF',
+                noteTextColor: '#fff'
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        const slides = document.querySelectorAll('.slide');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        slides.forEach(slide => {
+            observer.observe(slide);
+        });
+    </script>
+</body>
+</html>
+
