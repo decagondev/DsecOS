@@ -173,4 +173,4 @@ journey
 ---
 
 *DsecOS Enterprise – The last hypervisor you'll ever need.*  
-`enterprise@decadev.co.uk` | +44 20 8123 4567
+`enterprise@decadev.co.uk`
