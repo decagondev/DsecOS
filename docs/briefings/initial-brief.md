@@ -24,7 +24,7 @@ Unlike traditional virtualization platforms, DsecOS enforces **mandatory access 
 > **Target Customers**: FinTech, Healthcare, GovTech, SaaS providers handling regulated data.
 
 **Pricing**: Subscription starts at $999/node/year (unlimited VMs/containers)  
-**Free 30-day Enterprise Trial** → [trial.dsecos.io](https://trial.dsecos.io)
+**Free 30-day Enterprise Trial** → [trial.decadev.co.uk](https://trial.decadev.co.uk)
 
 ---
 
@@ -173,4 +173,4 @@ journey
 ---
 
 *DsecOS Enterprise – The last hypervisor you'll ever need.*  
-`enterprise@dsecos.io` | +44 20 8123 4567
+`enterprise@decadev.co.uk` | +44 20 8123 4567

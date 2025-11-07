@@ -26,7 +26,7 @@ DsecOS is a hardened, rebranded hypervisor built on Proxmox VE, designed for sec
 
 ### 1. Download ISO
 ```bash
-wget https://releases.dsecos.io/v0.1-mvp/dsecos-v0.1-mvp.iso
+wget https://releases.decadev.co.uk/v0.1-mvp/dsecos-v0.1-mvp.iso
 ```
 
 ### 2. Boot & Install
@@ -95,4 +95,4 @@ cd DecaOS
 
 **DsecOS – Because your apps deserve better than shared hosting.**
 
-[https://dsecos.io](https://dsecos.io) | [Contact](mailto:hello@dsecos.io)
+[https://decadev.co.uk](https://decadev.co.uk) | [Contact](mailto:hello@decadev.co.uk)

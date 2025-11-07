@@ -20,10 +20,10 @@
 
 ```bash
 # Download latest release
-wget https://releases.dsecos.io/v0.1-mvp/dsecos-v0.1-mvp.iso
+wget https://releases.decadev.co.uk/v0.1-mvp/dsecos-v0.1-mvp.iso
 
 # Optional: Verify integrity
-wget https://releases.dsecos.io/v0.1-mvp/SHA256SUMS
+wget https://releases.decadev.co.uk/v0.1-mvp/SHA256SUMS
 sha256sum -c SHA256SUMS
 ```
 
@@ -180,4 +180,4 @@ dsecos deploy node-postgres
 ---
 
 **Next**: [PXE Provisioning →](pxe-install.md)  
-**Support**: `support@dsecos.io`
+**Support**: `support@decadev.co.uk`

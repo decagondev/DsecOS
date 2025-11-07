@@ -144,4 +144,4 @@ Ready for rebranding, kernel patching, and DsecOS MVP.
 
 **Next**: Run the commands above → then we’ll start **Epic 1** (fork + submodule setup).  
 
-`support@dsecos.io` for any issues.
+`support@decadev.co.uk` for any issues.

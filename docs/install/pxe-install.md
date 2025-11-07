@@ -237,4 +237,4 @@ Use MAC-based Kickstart files:
 ---
 
 **Next**: [Stack Templates →](deploy-stack.md)  
-**Support**: `support@dsecos.io`
+**Support**: `support@decadev.co.uk`

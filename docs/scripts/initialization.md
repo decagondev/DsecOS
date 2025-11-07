@@ -275,4 +275,4 @@ sudo dsecos deploy node-postgres
 ---
 
 **Next**: Add to Packer build → automated ISO creation.  
-**Support**: `support@dsecos.io`
+**Support**: `support@decadev.co.uk`

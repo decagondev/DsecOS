@@ -327,12 +327,24 @@ h3 {
 .pharma-banner,
 .classified-banner,
 .soc-banner,
-.defense-banner {
+.defense-banner,
+.classification-banner,
+.quantum-banner,
+.defi-banner,
+.logistics-banner,
+.space-banner,
+.bio-banner,
+.hft-banner,
+.rwa-banner,
+.sovereign-banner,
+.enterprise-banner,
+.energy-banner {
     background: linear-gradient(90deg, rgba(30, 144, 255, 0.8), rgba(0, 191, 255, 0.8), rgba(30, 144, 255, 0.8));
     color: white;
     text-align: center;
-    padding: 12px;
+    padding: 15px;
     font-weight: 700;
+    font-size: 1.1em;
     letter-spacing: 4px;
     text-transform: uppercase;
     box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
@@ -525,6 +537,55 @@ pre code {
 
 .mermaid {
     background: transparent;
+}
+
+/* Domain Grid Styles */
+.domain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.domain-card {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.12), rgba(30, 144, 255, 0.12));
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.domain-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 191, 255, 0.3);
+    border-color: rgba(0, 191, 255, 0.6);
+}
+
+.domain-icon {
+    font-size: 3.5em;
+    margin-bottom: 10px;
+    display: block;
+    line-height: 1;
+}
+
+.domain-label {
+    color: #87CEEB;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ooda-highlight {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(0, 191, 255, 0.12));
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    padding: 30px;
+    border-radius: 15px;
+    margin: 30px 0;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
 }
 
 /* Color theme classes - all use blue theme now */

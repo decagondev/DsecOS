@@ -209,7 +209,7 @@ graph TD
 
 ## Reporting Vulnerabilities
 
-Email: [`security@dsecos.io`](mailto:security@dsecos.io)  
+Email: [`security@decadev.co.uk`](mailto:security@decadev.co.uk)  
 PGP Key: `0x1234ABCD` (available on request)
 
 ---

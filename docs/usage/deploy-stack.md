@@ -144,4 +144,4 @@ dsecos deploy myapp
 ---
 
 **Next**: [Security & Hardening →](hardening.md)  
-**Support**: `support@dsecos.io`
+**Support**: `support@decadev.co.uk`
